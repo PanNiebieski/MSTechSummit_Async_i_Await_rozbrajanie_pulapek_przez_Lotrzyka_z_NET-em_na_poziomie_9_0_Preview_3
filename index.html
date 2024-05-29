@@ -84,183 +84,63 @@ Ulepszymy kod async i await.
 Najlepsze praktyki, czyli na jakie pułapki trzeba uważać.
 Pokaż mi coś fajnego z .NET 9 Preview 3
 -->
-<section class="slide prism over bhgry">
-    <div class="grid-container">
-        <div class="HeaderTitle GG">
-            <h2 class="headerCODE GG">Klasa Thread bez parametru</h2>
-        </div>
-        <div class="PlaceCodeHere">
-            <pre style="font-size: 33px;overflow: hidden;  " class="language-csharp">
-                <code style="line-height: 33px !important;">
-                    private void Button_Click(object sender, RoutedEventArgs e)
-                    {
-                        Do();
-                    }
-                    
-                    private void Do()
-                    {
-                        txtBlock.Text += &quot;Rozpoczynam liczenie&quot;;
-                    
-                        var result = HeavyCalculation(txt_X.Text, txt_Y.Text);
-                    
-                        txtBlock.Text += result;
-                    }
-                    
-                    private string HeavyCalculation(string xT, string yT)
-                    {
-                        var x = int.Parse(xT);  
-                        var y = int.Parse(yT);
-                    
-                        int addition = x + y; int subtraction = x - y;
-                        int multiplication = x * y; double divison = x / y;
-                    
-                        Thread.Sleep(4000);
-                    
-                        return $&quot;\n{addition}, {subtraction}, {multiplication}, {divison}\n&quot;;
-                    }
-                </code>
-            </pre>
-        </div>
-    </div>
-</section>
-<section class="slide prism over bhgry">
-    <div class="grid-container">
-        <div class="HeaderTitle GG">
-            <h2 class="headerCODE GG">Klasa Thread bez parametru</h2>
-        </div>
-        <div class="PlaceCodeHere">
-            <pre style="font-size: 33px;overflow: hidden;  " class="language-csharp">
-                <code style="line-height: 33px !important;">
-                    private void Do()
-                    {
-                        txtBlock.Text += &quot;Rozpoczynam liczenie&quot;;
-                    
-                        var taskRun = Task.Run(() =&gt;HeavyCalculation(txt_X.Text, txt_Y.Text));
-                    
-                        taskRun.ContinueWith(ct =&gt;
-                        {
-                                txtBlock.Text += ct.Result;
-                        });
-                    
-                        taskRun.ContinueWith(ct =&gt;
-                        {
-                            if (ct.IsFaulted)
-                            {
-                                txtBlock.Text += ct.Exception;
-                            }
-                        });
-                    }
-                </code>
-            </pre>
-        </div>
-    </div>
-</section>
-<section class="slide prism over bhgry">
-    <div class="grid-container">
-        <div class="HeaderTitle GG">
-            <h2 class="headerCODE GG">Klasa Thread bez parametru</h2>
-        </div>
-        <div class="PlaceCodeHere">
-            <pre style="font-size: 33px;overflow: hidden;  " class="language-csharp">
-                <code style="line-height: 33px !important;">
-                    private void Do()
-                    {
-                        txtBlock.Text += &quot;Rozpoczynam liczenie&quot;;
-                        var x = txt_X.Text; var y = txt_Y.Text;
-                        var taskRun = Task.Run(() =&gt;HeavyCalculation(x, y));
-                    
-                        taskRun.ContinueWith(ct =&gt;
-                        {
-                            Dispatcher.Invoke(() =&gt;
-                            {
-                                txtBlock.Text += ct.Result;
-                            });
-                        });
-                    
-                        taskRun.ContinueWith(ct =&gt;
-                        {
-                            if (ct.IsFaulted)
-                            {
-                                Dispatcher.Invoke(() =&gt;
-                                {
-                                    txtBlock.Text += ct.Exception;
-                                });
-                            }
-                        });
-                    }
-                </code>
-            </pre>
-        </div>
-    </div>
-</section>
-<section class="slide prism over bhgry">
-    <div class="grid-container">
-        <div class="HeaderTitle GG">
-            <h2 class="headerCODE GG">Klasa Thread bez parametru</h2>
-        </div>
-        <div class="PlaceCodeHere">
-            <pre style="font-size: 33px;overflow: hidden;  " class="language-csharp">
-                <code style="line-height: 33px !important;">
-                    private async void Button_Click(object sender, RoutedEventArgs e)
-                    {
-                        await DoAsync();
-                    }
-                    
-                    private async Task DoAsync()
-                    {
-                        txtBlock.Text += &quot;Rozpoczynam liczenie&quot;;
-                    
-                        var result = await HeavyCalculationAsync(txt_X.Text, txt_Y.Text);
-                    
-                        txtBlock.Text += result;
-                    }
-                    
-                    private async Task&lt;string&gt; HeavyCalculationAsync(string xT, string yT)
-                    {
-                        var x = int.Parse(xT);
-                        var y = int.Parse(yT);
-                    
-                        int addition = x + y; int subtraction = x - y;
-                        int multiplication = x * y; double divison = x / y;
-                    
-                        await Task.Delay(4000);
-                    
-                        return $&quot;\n{addition}, {subtraction}, {multiplication}, {divison}\n&quot;;
-                    }
-                </code>
-            </pre>
-        </div>
-    </div>
-</section>
-<section class="slide prism over bhgry">
-    <div class="grid-container">
-        <div class="HeaderTitle GG">
-            <h2 class="headerCODE GG">Klasa Thread bez parametru</h2>
-        </div>
-        <div class="PlaceCodeHere">
-            <pre style="font-size: 33px;overflow: hidden;  " class="language-csharp">
-                <code style="line-height: 33px !important;">
-                    private async Task DoAsync()
-                    {
-                        txtBlock.Text += &quot;Rozpoczynam liczenie&quot;;
-                        string result;
-                    
-                        try
-                        {
-                            result  = await HeavyCalculationAsync(txt_X.Text, txt_Y.Text);
-                        }
-                        catch (Exception ex)
-                        {
-                            result = ex.ToString();
-                        }
-                    
-                        txtBlock.Text += result;
-                    }
-                </code>
-            </pre>
-        </div>
-    </div>
-</section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/02.gif" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/03.gif" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/1.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/2.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/3.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/4.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/5.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/6.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+  <!--
+        Tutaj wstawić slajdy o procesorze
+  -->
+  <section class="slide" style="background-color:black">
+    <figure>
+        <img class="cover" src="pictures/slides/11.png" alt="blog">
+        <figcaption class="white">CW</figcaption>
+    </figure>
+    </section>
     <section class="slide prism over bhgry">
         <div class="grid-container">
             <div class="HeaderTitle GG">
@@ -288,37 +168,6 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
                 </div>
                 <div class="odpowiedz">
                     
-                </div>
-            </div>
-        </div>
-    </section>
-    <section class="slide prism over bhgry">
-        <div class="grid-container">
-            <div class="HeaderTitle GG">
-                <h2 class="headerCODE GG">Thread z parametrem</h2>
-            </div>
-            <div class="PlaceCodeHere">
-                <pre style="font-size: 25px;overflow: hidden;  " class="language-csharp">
-                    <code style="line-height: 25px !important;">
-                        static void Main(string[] args)
-                        {
-                            Thread thread2 = new Thread(new ParameterizedThreadStart(Do2));
-                            thread2.IsBackground = true;
-                            thread2.Start("parametr");
-                            thread2.Join();
-                        }
-                
-                        public static void Do2(object par)
-                        {}
-                    </code>
-                </pre>
-            </div>
-            <div class="AnswerCode">
-                <div class="pytanie">
-                    <h3></h3>
-                </div>
-                <div class="odpowiedz">
-                    Jeżeli potrzebne Ci są parametry, to pojawia się nowa delegata
                 </div>
             </div>
         </div>
@@ -421,34 +270,141 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             </div>
           </div>
     </section>
+    <section class="slide creamR">
+        <span class="shout colors deepbluetext" ><span>SLAJD Na pomoc przychodzi Task API<br />
+        </span></span>
+    </section>
+    <section class="slide creamR">
+        <span class="shout colors deepbluetext" ><span>SLAJD Oto przykład aplikacji WPF<br />
+        </span></span>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/WPF APP.PNG" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
     <section class="slide prism over bhgry">
         <div class="grid-container">
             <div class="HeaderTitle GG">
-                <h2 class="headerCODE GG">ContinueWith -> Legacy</h2>
+                <h2 class="headerCODE GG">Przykład zablokowania wątku UI w WPF</h2>
             </div>
-            <div class="PlaceCodeHere">
-                <pre style="font-size: 29px;overflow: hidden;  " class="language-csharp">
-                    <code style="line-height: 29px !important;">
-                        Task&#x3C;int&#x3E;t = Task.Run(() =>
-                        {
-                            return 44;
-                        });
-                        
-                        Task&#x3C;int&#x3E; t2 = t.ContinueWith(a =>
-                        {
-                            return t.Result + 66;
-                        },
-                        TaskContinuationOptions.OnlyOnRanToCompletion);
-                        
-                        Task t3 = t.ContinueWith(a =>
-                        {
-                            Console.WriteLine("Error");
+            <div class="PlaceCodeHere canscroll">
+                <pre style="font-size: 20px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 20px !important;">
 
-                        }, TaskContinuationOptions.OnlyOnFaulted);
+
+
+                        private void Button_Click(object sender, RoutedEventArgs e)
+                        {
+                            Do();
+                        }
+                        
+                        private void Do()
+                        {
+                            txtBlock.Text += &quot;Rozpoczynam liczenie&quot;;
+                        
+                            var result = HeavyCalculation(txt_X.Text, txt_Y.Text);
+                        
+                            txtBlock.Text += result;
+                        }
+                        
+                        private string HeavyCalculation(string xT, string yT)
+                        {
+                            var x = int.Parse(xT);  
+                            var y = int.Parse(yT);
+                        
+                            int addition = x + y; int subtraction = x - y;
+                            int multiplication = x * y; double divison = x / y;
+                        
+                            Thread.Sleep(4000);
+                        
+                            return $&quot;\n{addition}, {subtraction}, {multiplication}, {divison}\n&quot;;
+                        }
                     </code>
                 </pre>
             </div>
-          </div>
+        </div>
+    </section>
+    <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG">
+                <h2 class="headerCODE GG">Rozwiązanie tego problemu przy pomocy Task API z .NET Framework 4</h2>
+            </div>
+            <div class="PlaceCodeHere ">
+                <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 24px !important;">
+                        private void Do()
+                        {
+                            txtBlock.Text += &quot;Rozpoczynam liczenie&quot;;
+                        
+                            var taskRun = Task.Run(() =&gt;HeavyCalculation(txt_X.Text, txt_Y.Text));
+                        
+                            taskRun.ContinueWith(ct =&gt;
+                            {
+                                    txtBlock.Text += ct.Result;
+                            });
+                        
+                            taskRun.ContinueWith(ct =&gt;
+                            {
+                                if (ct.IsFaulted)
+                                {
+                                    txtBlock.Text += ct.Exception;
+                                }
+                            });
+                        }
+                    </code>
+                </pre>
+            </div>
+        </div>
+    </section>
+    <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG">
+                <h2 class="headerCODE GG">Rozwiązanie tego problemu przy pomocy Task API z .NET Framework 4 PLUS synchronizacja wątku UI</h2>
+            </div>
+            <div class="PlaceCodeHere canscroll">
+                <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 24px !important;">
+
+
+                        
+
+
+
+                        private void Do()
+                        {
+                            txtBlock.Text += &quot;Rozpoczynam liczenie&quot;;
+                            var x = txt_X.Text; var y = txt_Y.Text;
+                            var taskRun = Task.Run(() =&gt;HeavyCalculation(x, y));
+                        
+                            taskRun.ContinueWith(ct =&gt;
+                            {
+                                Dispatcher.Invoke(() =&gt;
+                                {
+                                    txtBlock.Text += ct.Result;
+                                });
+                            });
+                        
+                            taskRun.ContinueWith(ct =&gt;
+                            {
+                                if (ct.IsFaulted)
+                                {
+                                    Dispatcher.Invoke(() =&gt;
+                                    {
+                                        txtBlock.Text += ct.Exception;
+                                    });
+                                }
+                            });
+                        }
+                    </code>
+                </pre>
+            </div>
+        </div>
+    </section>
+    <section class="slide creamR">
+        <span class="shout colors deepbluetext" ><span>Task API jest legacy<br />
+        </span></span>
     </section>
     <section class="slide prism over bhgry">
         <div class="grid-container">
@@ -500,6 +456,10 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             </div>
           </div>
     </section>
+    <section class="slide creamR">
+        <span class="shout colors deepbluetext" ><span>Są pewne metody które zostały<br />
+        </span></span>
+    </section>
     <section class="slide prism over bhgry">
         <div class="grid-container">
             <div class="HeaderTitle GG">
@@ -527,75 +487,136 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             </div>
           </div>
     </section>
+    <section class="slide creamR">
+        <span class="shout colors deepbluetext" ><span>SLAJD Na pomoc przychodzi Async i Await<br />
+        </span></span>
+    </section>
     <section class="slide prism over bhgry">
         <div class="grid-container">
             <div class="HeaderTitle GG">
-                <h2 class="headerCODE GG">Task, Async. </h2>
+                <h2 class="headerCODE GG">Async i Await z .NET Framework 4.5</h2>
             </div>
-            <div class="PlaceCodeHere">
-                <pre style="font-size: 37px;overflow: hidden;  " class="language-csharp">
-                    <code style="line-height: 37px !important;">
+            <div class="PlaceCodeHere canscroll">
+                <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 24px !important;">
 
-                        static async Task Main()
+
+
+
+
+
+                        private async void Button_Click(object sender, RoutedEventArgs e)
                         {
-                            Task t = What();
-                            await t;
-                
-                            var s = t.Status;
+                            await DoAsync();
                         }
-                
-                        static Task What()
+                        
+                        private async Task DoAsync()
                         {
-                            return new Task(
-                                () => Console.WriteLine("1"));
-                
+                            txtBlock.Text += &quot;Rozpoczynam liczenie&quot;;
+                        
+                            var result = await HeavyCalculationAsync(txt_X.Text, txt_Y.Text);
+                        
+                            txtBlock.Text += result;
+                        }
+                        
+                        private async Task&lt;string&gt; HeavyCalculationAsync(string xT, string yT)
+                        {
+                            var x = int.Parse(xT);
+                            var y = int.Parse(yT);
+                        
+                            int addition = x + y; int subtraction = x - y;
+                            int multiplication = x * y; double divison = x / y;
+                        
+                            await Task.Delay(4000);
+                        
+                            return $&quot;\n{addition}, {subtraction}, {multiplication}, {divison}\n&quot;;
                         }
                     </code>
                 </pre>
             </div>
         </div>
     </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/5.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/7.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
     <section class="slide prism over bhgry">
         <div class="grid-container">
             <div class="HeaderTitle GG">
-                <h2 class="headerCODE GG">Task, Async. </h2>
+                <h2 class="headerCODE GG">Async i Await obsługa wyjątku</h2>
             </div>
             <div class="PlaceCodeHere">
-                <pre style="font-size: 34px;overflow: hidden;  " class="language-csharp">
-                    <code style="line-height: 34px !important;">
-                        await Task.Run
-                        (
-                            () => DoExpensiveOperation(someParameter)
-                        );
+                <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 24px !important;">
+                        private async Task DoAsync()
+                        {
+                            txtBlock.Text += &quot;Rozpoczynam liczenie&quot;;
+                            string result;
+                        
+                            try
+                            {
+                                result  = await HeavyCalculationAsync(txt_X.Text, txt_Y.Text);
+                            }
+                            catch (Exception ex)
+                            {
+                                result = ex.ToString();
+                            }
+                        
+                            txtBlock.Text += result;
+                        }
                     </code>
                 </pre>
             </div>
-          </div>
-    </section>
-    <section class="slide creamGrey  compact ">
-        <h2>Async i Await?</h2>
-        <ol>
-            <li class="next">Zaraz to mówimy o Rust czy o C#</li>
-            <li class="next">Zaraz to mówimy o JavaScript czy o C#</li>
-            <li class="next">Zaraz to mówimy o Python czy o C#</li>
-            <li class="next">Zaraz to mówimy o TypeScript czy o C#</li>
-        </ol>
+        </div>
     </section>
     <section class="slide" style="background-color:black">
         <figure>
-            <img class="cover" src="pictures/02.gif" alt="blog">
+            <img class="cover" src="pictures/slides/8.png" alt="blog">
             <figcaption class="white">CW</figcaption>
         </figure>
     </section>
     <section class="slide" style="background-color:black">
         <figure>
-            <img class="cover" src="pictures/03.gif" alt="blog">
+            <img class="cover" src="pictures/slides/9.png" alt="blog">
             <figcaption class="white">CW</figcaption>
         </figure>
     </section>
     <section class="slide" style="background-color:black">
         <figure>
-            <img class="cover" src="pictures/03.png" alt="blog">
+            <img class="cover" src="pictures/slides/10.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/12.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/13.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/14.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+        <!-- TODO Wstawić kod ZE NIE TOWRZY NOWY WĄTEK-->  
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/15.png" alt="blog">
             <figcaption class="white">CW</figcaption>
         </figure>
     </section>
@@ -617,6 +638,12 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
                 </pre>
             </div>
           </div>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/16.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
     </section>
     <section class="slide prism over bhgry">
         <div class="grid-container">
@@ -661,11 +688,25 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             </div>
           </div>
     </section>
+
+    
+    <!-- <section class="slide creamGrey  compact ">
+        <h2>Async i Await?</h2>
+        <ol>
+            <li class="next">Zaraz to mówimy o Rust czy o C#</li>
+            <li class="next">Zaraz to mówimy o JavaScript czy o C#</li>
+            <li class="next">Zaraz to mówimy o Python czy o C#</li>
+            <li class="next">Zaraz to mówimy o TypeScript czy o C#</li>
+        </ol>
+    </section>
+
+
+
     <section class="slide creamR">
         <span class="shout colors deepbluetext" ><span>Ten kod zadziała róźnie w zależności od tego czy jest to ASP.NET CORE czy ASP.NET<br />
         </span></span>
-    </section>
-    <section class="slide prism over bhgry">
+    </section> -->
+    <!-- <section class="slide prism over bhgry">
         <div class="grid-container">
             <div class="HeaderTitle GG">
                 <h2 class="headerCODE GG">Ten kod zadziała róźnie w zależności od tego czy jest to ASP.NET CORE czy stary</h2>
@@ -703,9 +744,22 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             W ASP.NET CORE obie operacje pobrania zawartości strony WWW przez HttpClient uruchomią się równocześnie co spowoduje, że twoja lista napisów może wyglądać zupełnie inaczej.
             </span>
         </span>
+    </section> -->
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/17.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <!-- TODO Wstawić kod HIPOTEZY JAK DZIAŁĄ ASYNC I AWAIT--> 
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/18.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
     </section>
 
-    <!--DEMO PROSTE WYSŁANIE WIADOMOŚCI-->
+
     <section class="slide prism over bhgry">
         <div class="grid-container">
             <div class="HeaderTitle GG"> 
@@ -1755,11 +1809,74 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
                 </pre>
             </div>
         </div>
+    </section>
+    <section class="slide" style="background-color:white">
+        <figure>
+            <img class="cover" src="pictures/maszynastanow.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/19.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>   
+    <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG">
+                <h2 class="headerCODE GG">Task, Async. </h2>
+            </div>
+            <div class="PlaceCodeHere">
+                <pre style="font-size: 37px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 37px !important;">
+
+                        static async Task Main()
+                        {
+                            Task t = What();
+                            await t;
+                
+                            var s = t.Status;
+                        }
+                
+                        static Task What()
+                        {
+                            return new Task(
+                                () => Console.WriteLine("1"));
+                
+                        }
+                    </code>
+                </pre>
+            </div>
+        </div>
+    </section>
+    <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG">
+                <h2 class="headerCODE GG">Task, Async. </h2>
+            </div>
+            <div class="PlaceCodeHere">
+                <pre style="font-size: 34px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 34px !important;">
+                        await Task.Run
+                        (
+                            () => DoExpensiveOperation(someParameter)
+                        );
+                    </code>
+                </pre>
+            </div>
+          </div>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/20.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
     </section>   
     <section class="slide prism over bhgry">
         <div class="grid-container">
             <div class="HeaderTitle GG"> 
-                <h2 class="headerCODE GG">GetCatFactAsync</h2>
+                <h2 class="headerCODE GG">Async Void w zdarzeniach w WPF</h2>
             </div>
             <div class="PlaceCodeHere canscroll">
                 <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
@@ -1777,10 +1894,16 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             </div>
         </div>
     </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/21.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>   
     <section class="slide prism over bhgry">
         <div class="grid-container">
             <div class="HeaderTitle GG"> 
-                <h2 class="headerCODE GG">Async Void</h2>
+                <h2 class="headerCODE GG">Async Void w konstruktorze</h2>
             </div>
             <div class="PlaceCodeHere canscroll">
                 <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
@@ -1802,10 +1925,34 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             </div>
         </div>
     </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/asyncvoid-01.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/asyncvoid-02.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>   
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/asyncvoid-03.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/22.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>           
     <section class="slide prism over bhgry">
         <div class="grid-container">
             <div class="HeaderTitle GG"> 
-                <h2 class="headerCODE GG">Async Void</h2>
+                <h2 class="headerCODE GG">Async Void i FireAndForgetSafeAsync</h2>
             </div>
             <div class="PlaceCodeHere canscroll">
                 <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
@@ -1826,8 +1973,7 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
                         }
                         
                         public static class TaskUtilities
-                        {
-                        
+                        {                       
                             public static async void FireAndForgetSafeAsync(this Task task, 
                                 Action&lt;Exception&gt; handler = null)
                             {
@@ -1846,82 +1992,12 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             </div>
         </div>
     </section>  
-
-    <section class="slide prism over bhgry">
-        <div class="grid-container">
-            <div class="HeaderTitle GG"> 
-                <h2 class="headerCODE GG">Async Void</h2>
-            </div>
-            <div class="PlaceCodeHere canscroll">
-                <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
-                    <code style="line-height: 24px !important;">
-                        private async IAsyncEnumerable&lt;string&gt; GeMyPoem()
-                        {
-                            using var stream = new StreamReader(@&quot;D:\p.txt&quot;);
-                        
-                            while (await stream.ReadLineAsync() is string line)
-                            {
-                                await Task.Delay(500);
-                        
-                                yield return line;
-                            }
-                        }                     
-                    </code>
-                </pre>
-            </div>
-        </div>
-    </section>  
-    <section class="slide prism over bhgry">
-        <div class="grid-container">
-            <div class="HeaderTitle GG"> 
-                <h2 class="headerCODE GG">Async Void</h2>
-            </div>
-            <div class="PlaceCodeHere canscroll">
-                <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
-                    <code style="line-height: 24px !important;">
-                        private async IAsyncEnumerable&lt;string&gt; GeMyPoem()
-                        {
-                            using var stream = new StreamReader(@&quot;D:\p.txt&quot;);
-                        
-                            while (await stream.ReadLineAsync() is string line)
-                            {
-                                await Task.Delay(500);
-                        
-                                yield return line;
-                            }
-                        }                     
-                    </code>
-                </pre>
-            </div>
-        </div>
-    </section>  
-    <section class="slide prism over bhgry">
-        <div class="grid-container">
-            <div class="HeaderTitle GG"> 
-                <h2 class="headerCODE GG">Async Void</h2>
-            </div>
-            <div class="PlaceCodeHere canscroll">
-                <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
-                    <code style="line-height: 24px !important;">
-                        private async void Button_Click(object sender, RoutedEventArgs e)
-                        {
-                            await Read();
-                        }
-                    
-                        private async Task Read()
-                        {
-                            txtBlock.Text = "";
-                            await foreach (var item in GeMyPoem())
-                            {
-                                txtBlock.Text += item + "\n";
-                            }
-                        }                
-                    </code>
-                </pre>
-            </div>
-        </div>
-    </section>  
-
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/asyncvoid-04.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
     <section class="slide prism over bhgry">
         <div class="grid-container">
             <div class="HeaderTitle GG"> 
@@ -1950,7 +2026,18 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             </div>
         </div>
     </section>  
-    
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/23.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>  
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/24.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
     <section class="slide prism over bhgry">
         <div class="grid-container">
             <div class="HeaderTitle GG"> 
@@ -2014,7 +2101,39 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
                 </pre>
             </div>
         </div>
+    </section> 
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/25.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/26.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>  
+    <!-- TODO Wstawić kod .Wait() result -->  
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/27.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
     </section>    
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/28.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <!-- TODO Wstawić kod deadlock sync over async -->      
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/29.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
     <section class="slide prism over bhgry">
         <div class="grid-container">
             <div class="HeaderTitle GG"> 
@@ -2038,21 +2157,100 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
                 </pre>
             </div>
         </div>
-    </section>     
-        <section class="slide" style="background-color:white">
-            <figure>
-                <img class="cover" src="pictures/maszynastanow.png" alt="blog">
-                <figcaption class="white">CW</figcaption>
-            </figure>
-        </section>
-    
+    </section>          
     <section class="slide" style="background-color:black">
         <figure>
-            <img class="cover" src="pictures/MSTS24-204-OADN-11.png" alt="blog">
+            <img class="cover" src="pictures/slides/30.png" alt="blog">
             <figcaption class="white">CW</figcaption>
         </figure>
     </section>
-
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/31.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+       <!-- TODO Wstawić kod iASYNCENUMERALBE result -->  
+    <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG"> 
+                <h2 class="headerCODE GG">IAsyncEnumerable przykład użycia</h2>
+            </div>
+            <div class="PlaceCodeHere canscroll">
+                <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 24px !important;">
+                        private async IAsyncEnumerable&lt;string&gt; GeMyPoem()
+                        {
+                            using var stream = new StreamReader(@&quot;D:\p.txt&quot;);
+                        
+                            while (await stream.ReadLineAsync() is string line)
+                            {
+                                await Task.Delay(500);
+                        
+                                yield return line;
+                            }
+                        }                     
+                    </code>
+                </pre>
+            </div>
+        </div>
+    </section>  
+    <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG"> 
+                <h2 class="headerCODE GG">IAsyncEnumerable przykład użycia</h2>
+            </div>
+            <div class="PlaceCodeHere canscroll">
+                <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 24px !important;">
+                        private async IAsyncEnumerable&lt;string&gt; GeMyPoem()
+                        {
+                            using var stream = new StreamReader(@&quot;D:\p.txt&quot;);
+                        
+                            while (await stream.ReadLineAsync() is string line)
+                            {
+                                await Task.Delay(500);
+                        
+                                yield return line;
+                            }
+                        }                     
+                    </code>
+                </pre>
+            </div>
+        </div>
+    </section>  
+    <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG"> 
+                <h2 class="headerCODE GG">IAsyncEnumerable przykład użycia</h2>
+            </div>
+            <div class="PlaceCodeHere canscroll">
+                <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 24px !important;">
+                        private async void Button_Click(object sender, RoutedEventArgs e)
+                        {
+                            await Read();
+                        }
+                    
+                        private async Task Read()
+                        {
+                            txtBlock.Text = "";
+                            await foreach (var item in GeMyPoem())
+                            {
+                                txtBlock.Text += item + "\n";
+                            }
+                        }                
+                    </code>
+                </pre>
+            </div>
+        </div>
+    </section>  
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/32.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
     <section class="slide prism over bhgry">
         <div class="grid-container">
             <div class="HeaderTitle GG"> 
@@ -2085,6 +2283,24 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             </div>
         </div>
     </section> 
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/33.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/32.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/34.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
     <section class="slide prism over bhgry">
         <div class="grid-container">
             <div class="HeaderTitle GG"> 
@@ -2119,24 +2335,81 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             </div>
         </div>
     </section> 
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/ConfigureAwait.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/ConfigureAwait-02.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/ConfigureAwait-03.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/ConfigureAwait-04.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/35.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/36.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/37.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <!-- TODO Wstawić kod VALUE TASK result -->  
+    <!-- TODO Wstawić kod CO JEST SZYBSZE PARREL -->  
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/38.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/39.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+
     <section class="slide prism over bhgry">
         <div class="grid-container">
             <div class="HeaderTitle GG"> 
-                <h2 class="headerCODE GG">Async Void</h2>
+                <h2 class="headerCODE GG">Problem przetwarzania tasków jak tylko się skończą</h2>
             </div>
             <div class="PlaceCodeHere canscroll">
                 <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
                     <code style="line-height: 24px !important;">
-                        // Simulated download tasks
-                        List&lt;Task&lt;int&gt;&gt; downloadTasks = [DownloadData1, DownloadData2, DownloadData3];
+                        List&lt;Task&lt;int&gt;&gt; tasks = Enumerable.Range(1,5).Select(Calculate).ToList();
                         
                         // Process tasks as they complete
                         while (downloadTasks.Any())
                         {
-                            Task&lt;int&gt; finishedTask = await Task.WhenAny(downloadTasks);
-                            downloadTasks.Remove(finishedTask);
+                            Task&lt;int&gt; finishedTask = await Task.WhenAny(tasks);
+                            tasks.Remove(finishedTask);
                             int result = await finishedTask;
-                            ProcessDataChunk(result);
+                            //ProcessDataChunk(result);
+                            Console.WriteLine(result);
                         }                                       
                     </code>
                 </pre>
@@ -2147,7 +2420,7 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
     <section class="slide prism over bhgry">
         <div class="grid-container">
             <div class="HeaderTitle GG"> 
-                <h2 class="headerCODE GG">Async Void</h2>
+                <h2 class="headerCODE GG">Na pomoc przychodzi WhenEach</h2>
             </div>
             <div class="PlaceCodeHere canscroll">
                 <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
@@ -2168,7 +2441,7 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
     <section class="slide prism over bhgry">
         <div class="grid-container">
             <div class="HeaderTitle GG"> 
-                <h2 class="headerCODE GG">Async Void</h2>
+                <h2 class="headerCODE GG">Na pomoc przychodzi WhenEach</h2>
             </div>
             <div class="PlaceCodeHere canscroll">
                 <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
@@ -2196,7 +2469,7 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
     <section class="slide prism over bhgry">
         <div class="grid-container">
             <div class="HeaderTitle GG"> 
-                <h2 class="headerCODE GG">Async Void</h2>
+                <h2 class="headerCODE GG">Na pomoc przychodzi WhenEach</h2>
             </div>
             <div class="PlaceCodeHere canscroll">
                 <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
