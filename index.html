@@ -660,7 +660,25 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
     </section>
     <section class="slide" style="background-color:black">
         <figure>
-            <img class="cover" src="pictures/slides/8.png" alt="blog">
+            <img class="cover" src="pictures/slides2/18.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides2/22.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides2/19.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides2/20.png" alt="blog">
             <figcaption class="white">CW</figcaption>
         </figure>
     </section>
@@ -694,6 +712,133 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             <figcaption class="white">CW</figcaption>
         </figure>
     </section>
+    <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG ">
+                <h2 class="headerCODE GG">Ile wątków ten kod stworzy?</h2>
+            </div>
+            <div class="PlaceCodeHere">
+                <pre style="font-size: 16px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 16px !important;margin-left: -11em !important;">
+                        static async Task Main()
+                        {
+                            WriteThread("Begin Main");
+                            var a = await M1Async();
+                            WriteThread("Middle Main");
+                            var b = await M1Async();
+                            Console.WriteLine(a + b);
+                            WriteThread("End Main");
+                            Console.ReadKey();
+                        }
+                
+                        public static async Task&#x3C;int&#x3E; M1Async()
+                        {
+                            WriteThread("Begin M1Async");
+                            var i = await M2Async();
+                            WriteThread("End M1Async");
+                            return i + 1;
+                        }
+                
+                        public static async Task&#x3C;int&#x3E; M2Async()
+                        {
+                            WriteThread("At M2Async");
+                            return -1;
+                        }
+                
+                        public static void WriteThread(string helpfultoken)
+                        {
+                            Console.WriteLine(helpfultoken
+                                + " : " + Thread.CurrentThread.ManagedThreadId);
+                        }
+                    </code>
+                </pre>
+            </div>
+            <div class="AnswerCode">
+                <div class="pytanie">
+                    <h3>💡 Co pojawi się w konsoli?</h3>
+                </div>
+                <div class="odpowiedz full">
+                    [Wszędzie będzie 1]
+                </div>
+            </div>
+          </div>
+    </section>
+    <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG">
+                <h2 class="headerCODE GG">Async i Await : Stan zadania decyduje czy nowy wątek zostanie stworzony</h2>
+            </div>
+            <div class="PlaceCodeHere">
+                <pre style="font-size: 20px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 20px !important;">
+                        static async Task Main()
+                        {
+                            WriteThread("Begin Main");
+                            var a = await M1Async();
+                            WriteThread("Middle Main");
+                            var b = await M1Async();
+                            Console.WriteLine(a + b);
+                            WriteThread("End Main");
+                            Console.ReadKey();
+                        }
+                
+                        public static async Task&#x3C;int&#x3E; M1Async()
+                        {
+                            WriteThread("Begin M1Async");
+                            await Task.Delay(2000);
+                            WriteThread("End M1Async");
+                            return 0;
+                        }
+                
+                        public static void WriteThread(string helpfultoken)
+                        {
+                            Console.WriteLine(helpfultoken
+                                + " : " + Thread.CurrentThread.ManagedThreadId);
+                        }
+                    </code>
+                </pre>
+            </div>
+            <div class="AnswerCode">
+                <div class="pytanie">
+                    <h3>💡 Co pojawi się w konsoli?</h3>
+                </div>
+                <div class="odpowiedz full">
+                    1,1,4,4,4,4
+                </div>
+            </div>
+          </div>
+    </section>
+    <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG"> 
+                <h2 class="headerCODE GG">Przykład prawdziwego kodu async i await</h2>
+            </div>
+            <div class="PlaceCodeHere canscroll">
+                <pre style="font-size: 21px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 21px !important;">
+                        var fact = await GetCatFactAsync(new HttpClient());
+                        Console.WriteLine(fact.Fact);
+
+                        async Task&lt;CatFact&gt; GetCatFactAsync(HttpClient client)
+                        {
+                            var response = await client.GetAsync(&quot;https://catfact.ninja/fact&quot;);
+                            response.EnsureSuccessStatusCode();
+
+                            var stream = await response.Content.ReadAsStreamAsync();
+
+                            JsonSerializerOptions options = new();
+                            options.PropertyNameCaseInsensitive = true;
+                            var catfact = await JsonSerializer.DeserializeAsync&lt;CatFact&gt;(stream, options);
+
+                            return catfact ?? throw new InvalidOperationException(&quot;CatFact can&#39;t be null&quot;);
+                        }
+
+                        public record CatFact(string? Fact, int Length);
+                    </code>
+                </pre>
+            </div>
+        </div>
+    </section>
         <!-- TODO Wstawić kod ZE NIE TOWRZY NOWY WĄTEK-->  
     <section class="slide" style="background-color:black">
         <figure>
@@ -709,7 +854,8 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             <div class="PlaceCodeHere">
                 <pre style="font-size: 34px;overflow: hidden;  " class="language-csharp">
                     <code style="line-height: 34px !important;">
-                        Task&lt;string&gt; t = File.ReadAllTextAsync(@&quot;D:\numbers.txt&quot;);
+                        Task&lt;string&gt; t = File.ReadAllTextAsync
+                            (@&quot;D:\numbers.txt&quot;);
 
                         var numbers1 = await t;
                         var numbers2 = await t;
@@ -770,62 +916,6 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
           </div>
     </section>
 
-    
-    <!-- <section class="slide creamGrey  compact ">
-        <h2>Async i Await?</h2>
-        <ol>
-            <li class="next">Zaraz to mówimy o Rust czy o C#</li>
-            <li class="next">Zaraz to mówimy o JavaScript czy o C#</li>
-            <li class="next">Zaraz to mówimy o Python czy o C#</li>
-            <li class="next">Zaraz to mówimy o TypeScript czy o C#</li>
-        </ol>
-    </section>
-
-
-
-    <section class="slide creamR">
-        <span class="shout colors deepbluetext" ><span>Ten kod zadziała róźnie w zależności od tego czy jest to ASP.NET CORE czy ASP.NET<br />
-        </span></span>
-    </section> -->
-    <!-- <section class="slide prism over bhgry">
-        <div class="grid-container">
-            <div class="HeaderTitle GG">
-                <h2 class="headerCODE GG">Ten kod zadziała róźnie w zależności od tego czy jest to ASP.NET CORE czy stary</h2>
-            </div>
-            <div class="PlaceCodeHere">
-                <pre style="font-size: 22px;overflow: hidden;  " class="language-csharp">
-                    <code style="line-height: 22px !important;">
-
-                        private HttpClient _client = new HttpClient();
-
-                        async Task&#x3C;List&#x3C;string&#x3E;&#x3E; GetBothAsync(string url1, string url2)
-                        {
-                            var result = new List&#x3C;string&#x3E;();
-                            var task1 = GetOneAsync(result, url1);
-                            var task2 = GetOneAsync(result, url2);
-                            await Task.WhenAll(task1, task2);
-                            return result;
-                        }
-                        
-                        async Task GetOneAsync(List&#x3C;string&#x3E; result, string url)
-                        {
-                            var data = await _client.GetStringAsync(url);
-                            result.Add(data);
-                        }
-                    </code>
-                </pre>
-            </div>
-          </div>
-    </section>
-    <section class="slide creamBlack">
-        <span class="shout colors smallerfontnew" >
-            <span>
-            W ASP.NET HttpClient wykona po kolei operacje asynchroniczne - w jednym wątku - jak w kolejce. każda operacja HttpClient będzie czekała na wcześniejszą przez "Request Context".
-            <br /><br />
-            W ASP.NET CORE obie operacje pobrania zawartości strony WWW przez HttpClient uruchomią się równocześnie co spowoduje, że twoja lista napisów może wyglądać zupełnie inaczej.
-            </span>
-        </span>
-    </section> -->
     <section class="slide" style="background-color:black">
         <figure>
             <img class="cover" src="pictures/slides/17.png" alt="blog">
@@ -833,1065 +923,168 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
         </figure>
     </section>
     <!-- TODO Wstawić kod HIPOTEZY JAK DZIAŁĄ ASYNC I AWAIT--> 
+    <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG">
+                <h2 class="headerCODE GG">Hipoteza jak to działa</h2>
+            </div>
+            <div class="PlaceCodeHere">
+                <pre style="font-size: 18px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 18px !important;">
+                        static async Task Main()
+                        {
+                            Task&#x3C;int&#x3E; awaitableType = RandomNumberAsync();
+                        
+                            var awaiter = awaitableType.GetAwaiter();
+                        
+                            if (!awaiter.IsCompleted)
+                            {
+                                //robisz operacje kt&#xF3;ra nie jest zwi&#x105;zana
+                                //z zako&#x144;czeniem tego zadania
+                                //co&#x15B; mo&#x17C;e dzia&#x142;a&#x107; w tle
+                                //To symulje kod przed wyra&#x17C;eniem await
+                            }
+                        
+                            int a = awaiter.GetResult();
+                            //kod po await
+                        
+                            //ten kod jest synchroniczny gdy&#x17C; nie jest on pakowany przez maszyn&#x119; stan&#xF3;w
+                        }
+                        
+                        private static Task&#x3C;int&#x3E; RandomNumberAsync()
+                        {
+                            return Task.FromResult(4);
+                        }
+                    </code>
+                </pre>
+            </div>
+          </div>
+    </section>
     <section class="slide" style="background-color:black">
         <figure>
             <img class="cover" src="pictures/slides/18.png" alt="blog">
             <figcaption class="white">CW</figcaption>
         </figure>
     </section>
-
-
     <section class="slide prism over bhgry">
         <div class="grid-container">
-            <div class="HeaderTitle GG"> 
-                <h2 class="headerCODE GG">GetCatFact</h2>
+            <div class="HeaderTitle GG">
+                <h2 class="headerCODE GG">Maszyna stanów async i await</h2>
             </div>
-            <div class="PlaceCodeHere canscroll">
-                <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
-                    <code style="line-height: 24px !important;">
-                        var fact = await GetCatFact(new HttpClient());
-                        Console.WriteLine(fact.Fact);
-
-                        async Task&lt;CatFact&gt; GetCatFact(HttpClient client)
+            <div class="PlaceCodeHere">
+                <pre style="font-size: 22px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height:22px !important;">
+                        static async Task BarAsync()
                         {
-                            var response = await client.GetAsync(&quot;https://catfact.ninja/fact&quot;);
-                            response.EnsureSuccessStatusCode();
-
-                            var stream = await response.Content.ReadAsStreamAsync();
-
-                            JsonSerializerOptions options = new();
-                            options.PropertyNameCaseInsensitive = true;
-                            var catfact = await JsonSerializer.DeserializeAsync&lt;CatFact&gt;(stream, options);
-
-                            return catfact ?? throw new InvalidOperationException(&quot;CatFact can&#39;t be null&quot;);
+                            Console.WriteLine("This happens before await");
+                        
+                            int i = await QuxAsync();
+                        
+                            Console.WriteLine("This happens after await. The result of await is " + i);
                         }
-
-                        public record CatFact(string? Fact, int Length);
                     </code>
                 </pre>
             </div>
-        </div>
+          </div>
+    </section>
+    
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides2/21.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
     </section>
     <section class="slide prism over bhgry">
         <div class="grid-container">
-            <div class="HeaderTitle GG"> 
-                <h2 class="headerCODE GG">GetCatFactAsync</h2>
+            <div class="HeaderTitle GG">
+                <h2 class="headerCODE GG">Maszyna stanów async i await</h2>
             </div>
-            <div class="PlaceCodeHere canscroll">
-                <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
-                    <code style="line-height: 24px !important;">
-                        var fact = await GetCatFactAsync(new HttpClient());
-                        Console.WriteLine(fact.Fact);
-
-                        async Task&lt;CatFact&gt; GetCatFactAsync(HttpClient client)
+            <div class="PlaceCodeHere">
+                <pre style="font-size: 22px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height:22px !important;">
+                        private static Task BarAsync()
                         {
-                            var response = await client.GetAsync(&quot;https://catfact.ninja/fact&quot;);
-                            response.EnsureSuccessStatusCode();
-
-                            var stream = await response.Content.ReadAsStreamAsync();
-
-                            JsonSerializerOptions options = new();
-                            options.PropertyNameCaseInsensitive = true;
-                            var catfact = await JsonSerializer.DeserializeAsync&lt;CatFact&gt;(stream, options);
-
-                            return catfact ?? throw new InvalidOperationException(&quot;CatFact can&#39;t be null&quot;);
+                          Program.&#x3C;BarAsync&#x3E;d__2 stateMachine;
+                          stateMachine.&#x3C;&#x3E;t__builder = AsyncTaskMethodBuilder.Create();
+                          stateMachine.&#x3C;&#x3E;1__state = -1;
+                          stateMachine.&#x3C;&#x3E;t__builder.Start&#x3C;Program.&#x3C;BarAsync&#x3E;d__2&#x3E;(ref stateMachine);
+                          return stateMachine.&#x3C;&#x3E;t__builder.Task;
                         }
-
-                        public record CatFact(string? Fact, int Length);
                     </code>
                 </pre>
             </div>
-        </div>
+          </div>
     </section>
     <section class="slide prism over bhgry">
         <div class="grid-container">
-            <div class="HeaderTitle GG"> 
-                <h2 class="headerCODE GG">GetCatFactAsync</h2>
+            <div class="HeaderTitle GG">
+                <h2 class="headerCODE GG">Maszyna stanów async i await</h2>
             </div>
-            <div class="PlaceCodeHere canscroll">
-                <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
-                    <code style="line-height: 24px !important;">
-                        using System.Text.Json;
-                        using System;
-                        using System.Net.Http;
-                        using System.Threading.Tasks;
-                                            
-                        public record CatFact(string? Fact, int Length);
+            <div class="PlaceCodeHere">
+                <pre style="font-size: 10px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height:10px !important;">
+                        private struct &#x3C;BarAsync&#x3E;d__2 : IAsyncStateMachine
+                        {
+                          public int &#x3C;&#x3E;1__state;
+                          public AsyncTaskMethodBuilder &#x3C;&#x3E;t__builder;
+                          private TaskAwaiter&#x3C;int&#x3E; &#x3C;&#x3E;u__1;
                         
-                        public class C {
-                            public async Task M() 
-                            {
-                               var fact = await GetCatFact(new HttpClient());
-                               Console.WriteLine(fact.Fact);                   
-                            }
-                            
-                            public async Task&lt;CatFact&gt; GetCatFact(HttpClient client)
-                            {
-                                var response = await client.GetAsync(&quot;https://catfact.ninja/fact&quot;);
-                                response.EnsureSuccessStatusCode();
+                          void IAsyncStateMachine.MoveNext()
+                          {
+                            &#x9;int num1 = this.&#x3C;&#x3E;1__state;
+                            &#x9;try
+                            &#x9;{
+                            &#x9;  TaskAwaiter&#x3C;int&#x3E; awaiter;
+                            &#x9;  int num2;
+                            &#x9;  if (num1 != 0)
+                            &#x9;  {
+                            &#x9;&#x9;Console.WriteLine(&#x22;This happens before await&#x22;);
+                            &#x9;&#x9;awaiter = Program.QuxAsync().GetAwaiter();
+                            &#x9;&#x9;if (!awaiter.IsCompleted)
+                            &#x9;&#x9;{
+                            &#x9;&#x9;  this.&#x3C;&#x3E;1__state = num2 = 0;
+                            &#x9;&#x9;  this.&#x3C;&#x3E;u__1 = awaiter;
+                            &#x9;&#x9;  this.&#x3C;&#x3E;t__builder.AwaitUnsafeOnCompleted&#x3C;TaskAwaiter&#x3C;int&#x3E;, Program.&#x3C;BarAsync&#x3E;d__2&#x3E;(ref awaiter, ref this);
+                            &#x9;&#x9;  return;
+                            &#x9;&#x9;}
+                            &#x9;  }
+                            &#x9;  else
+                            &#x9;  {
+                            &#x9;&#x9;awaiter = this.&#x3C;&#x3E;u__1;
+                            &#x9;&#x9;this.&#x3C;&#x3E;u__1 = new TaskAwaiter&#x3C;int&#x3E;();
+                            &#x9;&#x9;this.&#x3C;&#x3E;1__state = num2 = -1;
+                            &#x9;  }
+                            &#x9;  Console.WriteLine(&#x22;This happens after await. The result of await is &#x22; + (object) awaiter.GetResult());
+                            &#x9;}
+                            &#x9;catch (Exception ex)
+                            &#x9;{
+                            &#x9;  this.&#x3C;&#x3E;1__state = -2;
+                            &#x9;  this.&#x3C;&#x3E;t__builder.SetException(ex);
+                            &#x9;  return;
+                            &#x9;}
+                            &#x9;this.&#x3C;&#x3E;1__state = -2;
+                            &#x9;this.&#x3C;&#x3E;t__builder.SetResult();
+                          }
                         
-                                var stream = await response.Content.ReadAsStreamAsync();
-                        
-                                JsonSerializerOptions options = new();
-                                options.PropertyNameCaseInsensitive = true;
-                                var catfact = await JsonSerializer.DeserializeAsync&lt;CatFact&gt;(stream, options);
-                        
-                                return catfact ?? throw new InvalidOperationException(&quot;CatFact can&amp;#39;t be null&quot;);
-                            }
-                        }  
+                          [DebuggerHidden]
+                          void IAsyncStateMachine.SetStateMachine(IAsyncStateMachine stateMachine)
+                          {
+                            &#x9;this.&#x3C;&#x3E;t__builder.SetStateMachine(stateMachine);
+                          }
+                        }
                     </code>
                 </pre>
             </div>
-        </div>
+          </div>
     </section>
-    <section class="slide prism over bhgry">
-        <div class="grid-container">
-            <div class="HeaderTitle GG"> 
-                <h2 class="headerCODE GG">GetCatFactAsync</h2>
-            </div>
-            <div class="PlaceCodeHere canscroll">
-                <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
-                    <code style="line-height: 24px !important;">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                        using System;
-                        using System.Collections.Generic;
-                        using System.Diagnostics;
-                        using System.IO;
-                        using System.Net.Http;
-                        using System.Reflection;
-                        using System.Runtime.CompilerServices;
-                        using System.Security;
-                        using System.Security.Permissions;
-                        using System.Text;
-                        using System.Text.Json;
-                        using System.Threading.Tasks;
-                        
-                        [assembly: CompilationRelaxations(8)]
-                        [assembly: RuntimeCompatibility(WrapNonExceptionThrows = true)]
-                        [assembly: Debuggable(DebuggableAttribute.DebuggingModes.Default | DebuggableAttribute.DebuggingModes.IgnoreSymbolStoreSequencePoints | DebuggableAttribute.DebuggingModes.EnableEditAndContinue | DebuggableAttribute.DebuggingModes.DisableOptimizations)]
-                        [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
-                        [assembly: AssemblyVersion(&quot;0.0.0.0&quot;)]
-                        [module: UnverifiableCode]
-                        [module: RefSafetyRules(11)]
-                        
-                        [NullableContext(2)]
-                        [Nullable(0)]
-                        public class CatFact : IEquatable&lt;CatFact&gt;
-                        {
-                            [CompilerGenerated]
-                            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-                            private readonly string &lt;Fact&gt;k__BackingField;
-                        
-                            [CompilerGenerated]
-                            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-                            private readonly int &lt;Length&gt;k__BackingField;
-                        
-                            [Nullable(1)]
-                            [CompilerGenerated]
-                            protected virtual Type EqualityContract
-                            {
-                                [NullableContext(1)]
-                                [CompilerGenerated]
-                                get
-                                {
-                                    return typeof(CatFact);
-                                }
-                            }
-                        
-                            public string Fact
-                            {
-                                [CompilerGenerated]
-                                get
-                                {
-                                    return &lt;Fact&gt;k__BackingField;
-                                }
-                                [CompilerGenerated]
-                                init
-                                {
-                                    &lt;Fact&gt;k__BackingField = value;
-                                }
-                            }
-                        
-                            public int Length
-                            {
-                                [CompilerGenerated]
-                                get
-                                {
-                                    return &lt;Length&gt;k__BackingField;
-                                }
-                                [CompilerGenerated]
-                                init
-                                {
-                                    &lt;Length&gt;k__BackingField = value;
-                                }
-                            }
-                        
-                            public CatFact(string Fact, int Length)
-                            {
-                                &lt;Fact&gt;k__BackingField = Fact;
-                                &lt;Length&gt;k__BackingField = Length;
-                                base..ctor();
-                            }
-                        
-                            [NullableContext(1)]
-                            [CompilerGenerated]
-                            public override string ToString()
-                            {
-                                StringBuilder stringBuilder = new StringBuilder();
-                                stringBuilder.Append(&quot;CatFact&quot;);
-                                stringBuilder.Append(&quot; { &quot;);
-                                if (PrintMembers(stringBuilder))
-                                {
-                                    stringBuilder.Append(&#39; &#39;);
-                                }
-                                stringBuilder.Append(&#39;}&#39;);
-                                return stringBuilder.ToString();
-                            }
-                        
-                            [NullableContext(1)]
-                            [CompilerGenerated]
-                            protected virtual bool PrintMembers(StringBuilder builder)
-                            {
-                                RuntimeHelpers.EnsureSufficientExecutionStack();
-                                builder.Append(&quot;Fact = &quot;);
-                                builder.Append((object)Fact);
-                                builder.Append(&quot;, Length = &quot;);
-                                builder.Append(Length.ToString());
-                                return true;
-                            }
-                        
-                            [CompilerGenerated]
-                            public static bool operator !=(CatFact left, CatFact right)
-                            {
-                                return !(left == right);
-                            }
-                        
-                            [CompilerGenerated]
-                            public static bool operator ==(CatFact left, CatFact right)
-                            {
-                                return (object)left == right || ((object)left != null &amp;&amp; left.Equals(right));
-                            }
-                        
-                            [CompilerGenerated]
-                            public override int GetHashCode()
-                            {
-                                return (EqualityComparer&lt;Type&gt;.Default.GetHashCode(EqualityContract) * -1521134295 + EqualityComparer&lt;string&gt;.Default.GetHashCode(&lt;Fact&gt;k__BackingField)) * -1521134295 + EqualityComparer&lt;int&gt;.Default.GetHashCode(&lt;Length&gt;k__BackingField);
-                            }
-                        
-                            [CompilerGenerated]
-                            public override bool Equals(object obj)
-                            {
-                                return Equals(obj as CatFact);
-                            }
-                        
-                            [CompilerGenerated]
-                            public virtual bool Equals(CatFact other)
-                            {
-                                return (object)this == other || ((object)other != null &amp;&amp; EqualityContract == other.EqualityContract &amp;&amp; EqualityComparer&lt;string&gt;.Default.Equals(&lt;Fact&gt;k__BackingField, other.&lt;Fact&gt;k__BackingField) &amp;&amp; EqualityComparer&lt;int&gt;.Default.Equals(&lt;Length&gt;k__BackingField, other.&lt;Length&gt;k__BackingField));
-                            }
-                        
-                            [NullableContext(1)]
-                            [CompilerGenerated]
-                            public virtual CatFact &lt;Clone&gt;$()
-                            {
-                                return new CatFact(this);
-                            }
-                        
-                            [CompilerGenerated]
-                            protected CatFact([Nullable(1)] CatFact original)
-                            {
-                                &lt;Fact&gt;k__BackingField = original.&lt;Fact&gt;k__BackingField;
-                                &lt;Length&gt;k__BackingField = original.&lt;Length&gt;k__BackingField;
-                            }
-                        
-                            [CompilerGenerated]
-                            public void Deconstruct(out string Fact, out int Length)
-                            {
-                                Fact = this.Fact;
-                                Length = this.Length;
-                            }
-                        }
-                        
-                        [NullableContext(1)]
-                        [Nullable(0)]
-                        public class C
-                        {
-                            [CompilerGenerated]
-                            private sealed class &lt;GetCatFact&gt;d__1 : IAsyncStateMachine
-                            {
-                                public int &lt;&gt;1__state;
-                        
-                                [Nullable(0)]
-                                public AsyncTaskMethodBuilder&lt;CatFact&gt; &lt;&gt;t__builder;
-                        
-                                [Nullable(0)]
-                                public HttpClient client;
-                        
-                                [Nullable(0)]
-                                public C &lt;&gt;4__this;
-                        
-                                [Nullable(0)]
-                                private HttpResponseMessage &lt;response&gt;5__1;
-                        
-                                [Nullable(0)]
-                                private Stream &lt;stream&gt;5__2;
-                        
-                                [Nullable(0)]
-                                private JsonSerializerOptions &lt;options&gt;5__3;
-                        
-                                [Nullable(0)]
-                                private CatFact &lt;catfact&gt;5__4;
-                        
-                                [Nullable(0)]
-                                private HttpResponseMessage &lt;&gt;s__5;
-                        
-                                [Nullable(0)]
-                                private Stream &lt;&gt;s__6;
-                        
-                                [Nullable(0)]
-                                private CatFact &lt;&gt;s__7;
-                        
-                                [Nullable(new byte[] { 0, 1 })]
-                                private TaskAwaiter&lt;HttpResponseMessage&gt; &lt;&gt;u__1;
-                        
-                                [Nullable(new byte[] { 0, 1 })]
-                                private TaskAwaiter&lt;Stream&gt; &lt;&gt;u__2;
-                        
-                                [Nullable(new byte[] { 0, 2 })]
-                                private ValueTaskAwaiter&lt;CatFact&gt; &lt;&gt;u__3;
-                        
-                                private void MoveNext()
-                                {
-                                    int num = &lt;&gt;1__state;
-                                    CatFact result;
-                                    try
-                                    {
-                                        TaskAwaiter&lt;HttpResponseMessage&gt; awaiter3;
-                                        TaskAwaiter&lt;Stream&gt; awaiter2;
-                                        ValueTaskAwaiter&lt;CatFact&gt; awaiter;
-                                        switch (num)
-                                        {
-                                            default:
-                                                awaiter3 = client.GetAsync(&quot;https://catfact.ninja/fact&quot;).GetAwaiter();
-                                                if (!awaiter3.IsCompleted)
-                                                {
-                                                    num = (&lt;&gt;1__state = 0);
-                                                    &lt;&gt;u__1 = awaiter3;
-                                                    &lt;GetCatFact&gt;d__1 stateMachine = this;
-                                                    &lt;&gt;t__builder.AwaitUnsafeOnCompleted(ref awaiter3, ref stateMachine);
-                                                    return;
-                                                }
-                                                goto IL_008a;
-                                            case 0:
-                                                awaiter3 = &lt;&gt;u__1;
-                                                &lt;&gt;u__1 = default(TaskAwaiter&lt;HttpResponseMessage&gt;);
-                                                num = (&lt;&gt;1__state = -1);
-                                                goto IL_008a;
-                                            case 1:
-                                                awaiter2 = &lt;&gt;u__2;
-                                                &lt;&gt;u__2 = default(TaskAwaiter&lt;Stream&gt;);
-                                                num = (&lt;&gt;1__state = -1);
-                                                goto IL_011b;
-                                            case 2:
-                                                {
-                                                    awaiter = &lt;&gt;u__3;
-                                                    &lt;&gt;u__3 = default(ValueTaskAwaiter&lt;CatFact&gt;);
-                                                    num = (&lt;&gt;1__state = -1);
-                                                    break;
-                                                }
-                                                IL_011b:
-                                                &lt;&gt;s__6 = awaiter2.GetResult();
-                                                &lt;stream&gt;5__2 = &lt;&gt;s__6;
-                                                &lt;&gt;s__6 = null;
-                                                &lt;options&gt;5__3 = new JsonSerializerOptions();
-                                                &lt;options&gt;5__3.PropertyNameCaseInsensitive = true;
-                                                awaiter = JsonSerializer.DeserializeAsync&lt;CatFact&gt;(&lt;stream&gt;5__2, &lt;options&gt;5__3).GetAwaiter();
-                                                if (!awaiter.IsCompleted)
-                                                {
-                                                    num = (&lt;&gt;1__state = 2);
-                                                    &lt;&gt;u__3 = awaiter;
-                                                    &lt;GetCatFact&gt;d__1 stateMachine = this;
-                                                    &lt;&gt;t__builder.AwaitUnsafeOnCompleted(ref awaiter, ref stateMachine);
-                                                    return;
-                                                }
-                                                break;
-                                                IL_008a:
-                                                &lt;&gt;s__5 = awaiter3.GetResult();
-                                                &lt;response&gt;5__1 = &lt;&gt;s__5;
-                                                &lt;&gt;s__5 = null;
-                                                &lt;response&gt;5__1.EnsureSuccessStatusCode();
-                                                awaiter2 = &lt;response&gt;5__1.Content.ReadAsStreamAsync().GetAwaiter();
-                                                if (!awaiter2.IsCompleted)
-                                                {
-                                                    num = (&lt;&gt;1__state = 1);
-                                                    &lt;&gt;u__2 = awaiter2;
-                                                    &lt;GetCatFact&gt;d__1 stateMachine = this;
-                                                    &lt;&gt;t__builder.AwaitUnsafeOnCompleted(ref awaiter2, ref stateMachine);
-                                                    return;
-                                                }
-                                                goto IL_011b;
-                                        }
-                                        &lt;&gt;s__7 = awaiter.GetResult();
-                                        &lt;catfact&gt;5__4 = &lt;&gt;s__7;
-                                        &lt;&gt;s__7 = null;
-                                        CatFact catFact = &lt;catfact&gt;5__4;
-                                        if ((object)catFact == null)
-                                        {
-                                            throw new InvalidOperationException(&quot;CatFact can&amp;#39;t be null&quot;);
-                                        }
-                                        result = catFact;
-                                    }
-                                    catch (Exception exception)
-                                    {
-                                        &lt;&gt;1__state = -2;
-                                        &lt;response&gt;5__1 = null;
-                                        &lt;stream&gt;5__2 = null;
-                                        &lt;options&gt;5__3 = null;
-                                        &lt;catfact&gt;5__4 = null;
-                                        &lt;&gt;t__builder.SetException(exception);
-                                        return;
-                                    }
-                                    &lt;&gt;1__state = -2;
-                                    &lt;response&gt;5__1 = null;
-                                    &lt;stream&gt;5__2 = null;
-                                    &lt;options&gt;5__3 = null;
-                                    &lt;catfact&gt;5__4 = null;
-                                    &lt;&gt;t__builder.SetResult(result);
-                                }
-                        
-                                void IAsyncStateMachine.MoveNext()
-                                {
-                                    //ILSpy generated this explicit interface implementation from .override directive in MoveNext
-                                    this.MoveNext();
-                                }
-                        
-                                [DebuggerHidden]
-                                private void SetStateMachine(IAsyncStateMachine stateMachine)
-                                {
-                                }
-                        
-                                void IAsyncStateMachine.SetStateMachine(IAsyncStateMachine stateMachine)
-                                {
-                                    //ILSpy generated this explicit interface implementation from .override directive in SetStateMachine
-                                    this.SetStateMachine(stateMachine);
-                                }
-                            }
-                        
-                        
-                            [CompilerGenerated]
-                            private sealed class &lt;M&gt;d__0 : IAsyncStateMachine
-                            {
-                                public int &lt;&gt;1__state;
-                        
-                                public AsyncTaskMethodBuilder &lt;&gt;t__builder;
-                        
-                                [Nullable(0)]
-                                public C &lt;&gt;4__this;
-                        
-                                [Nullable(0)]
-                                private CatFact &lt;fact&gt;5__1;
-                        
-                                [Nullable(0)]
-                                private CatFact &lt;&gt;s__2;
-                        
-                                [Nullable(new byte[] { 0, 1 })]
-                                private TaskAwaiter&lt;CatFact&gt; &lt;&gt;u__1;
-                        
-                                private void MoveNext()
-                                {
-                                    int num = &lt;&gt;1__state;
-                                    try
-                                    {
-                                        TaskAwaiter&lt;CatFact&gt; awaiter;
-                                        if (num != 0)
-                                        {
-                                            awaiter = &lt;&gt;4__this.GetCatFact(new HttpClient()).GetAwaiter();
-                                            if (!awaiter.IsCompleted)
-                                            {
-                                                num = (&lt;&gt;1__state = 0);
-                                                &lt;&gt;u__1 = awaiter;
-                                                &lt;M&gt;d__0 stateMachine = this;
-                                                &lt;&gt;t__builder.AwaitUnsafeOnCompleted(ref awaiter, ref stateMachine);
-                                                return;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            awaiter = &lt;&gt;u__1;
-                                            &lt;&gt;u__1 = default(TaskAwaiter&lt;CatFact&gt;);
-                                            num = (&lt;&gt;1__state = -1);
-                                        }
-                                        &lt;&gt;s__2 = awaiter.GetResult();
-                                        &lt;fact&gt;5__1 = &lt;&gt;s__2;
-                                        &lt;&gt;s__2 = null;
-                                        Console.WriteLine(&lt;fact&gt;5__1.Fact);
-                                    }
-                                    catch (Exception exception)
-                                    {
-                                        &lt;&gt;1__state = -2;
-                                        &lt;fact&gt;5__1 = null;
-                                        &lt;&gt;t__builder.SetException(exception);
-                                        return;
-                                    }
-                                    &lt;&gt;1__state = -2;
-                                    &lt;fact&gt;5__1 = null;
-                                    &lt;&gt;t__builder.SetResult();
-                                }
-                        
-                                void IAsyncStateMachine.MoveNext()
-                                {
-                                    //ILSpy generated this explicit interface implementation from .override directive in MoveNext
-                                    this.MoveNext();
-                                }
-                        
-                                [DebuggerHidden]
-                                private void SetStateMachine(IAsyncStateMachine stateMachine)
-                                {
-                                }
-                        
-                                void IAsyncStateMachine.SetStateMachine(IAsyncStateMachine stateMachine)
-                                {
-                                    //ILSpy generated this explicit interface implementation from .override directive in SetStateMachine
-                                    this.SetStateMachine(stateMachine);
-                                }
-                            }
-                        
-                            [AsyncStateMachine(typeof(&lt;M&gt;d__0))]
-                            [DebuggerStepThrough]
-                            public Task M()
-                            {
-                                &lt;M&gt;d__0 stateMachine = new &lt;M&gt;d__0();
-                                stateMachine.&lt;&gt;t__builder = AsyncTaskMethodBuilder.Create();
-                                stateMachine.&lt;&gt;4__this = this;
-                                stateMachine.&lt;&gt;1__state = -1;
-                                stateMachine.&lt;&gt;t__builder.Start(ref stateMachine);
-                                return stateMachine.&lt;&gt;t__builder.Task;
-                            }
-                        
-                            [AsyncStateMachine(typeof(&lt;GetCatFact&gt;d__1))]
-                            [DebuggerStepThrough]
-                            public Task&lt;CatFact&gt; GetCatFact(HttpClient client)
-                            {
-                                &lt;GetCatFact&gt;d__1 stateMachine = new &lt;GetCatFact&gt;d__1();
-                                stateMachine.&lt;&gt;t__builder = AsyncTaskMethodBuilder&lt;CatFact&gt;.Create();
-                                stateMachine.&lt;&gt;4__this = this;
-                                stateMachine.client = client;
-                                stateMachine.&lt;&gt;1__state = -1;
-                                stateMachine.&lt;&gt;t__builder.Start(ref stateMachine);
-                                return stateMachine.&lt;&gt;t__builder.Task;
-                            }
-                        }
-                        
-                    </code>
-                </pre>
-            </div>
-        </div>
+    <section class="slide" style="background-color:whitesmoke">
+        <figure>
+            <img class="cover" src="pictures/06.png" alt="blog">
+            <figcaption class="white">Copyright © Cezary Walenciuk</figcaption>
+        </figure>
     </section>
-    <section class="slide prism over bhgry">
-        <div class="grid-container">
-            <div class="HeaderTitle GG"> 
-                <h2 class="headerCODE GG">GetCatFactAsync</h2>
-            </div>
-            <div class="PlaceCodeHere canscroll">
-                <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
-                    <code style="line-height: 24px !important;">
-                        using System;
-                        using System.Threading.Tasks;
-                        
-                        async Task RunAsync()
-                        { 
-                           var y = 5;
-                                
-                           await Task.Delay(4000);
-                                
-                           Console.Write(y);
-                        }                                   
-                    </code>
-                </pre>
-            </div>
-        </div>
-    </section>   
-    <section class="slide prism over bhgry">
-        <div class="grid-container">
-            <div class="HeaderTitle GG"> 
-                <h2 class="headerCODE GG">GetCatFactAsync</h2>
-            </div>
-            <div class="PlaceCodeHere canscroll">
-                <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
-                    <code style="line-height: 24px !important;">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                        using System;
-                        using System.Diagnostics;
-                        using System.Reflection;
-                        using System.Runtime.CompilerServices;
-                        using System.Security;
-                        using System.Security.Permissions;
-                        using System.Threading.Tasks;
-                        
-                        [assembly: CompilationRelaxations(8)]
-                        [assembly: RuntimeCompatibility(WrapNonExceptionThrows = true)]
-                        [assembly: Debuggable(DebuggableAttribute.DebuggingModes.Default | DebuggableAttribute.DebuggingModes.IgnoreSymbolStoreSequencePoints | DebuggableAttribute.DebuggingModes.EnableEditAndContinue | DebuggableAttribute.DebuggingModes.DisableOptimizations)]
-                        [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
-                        [assembly: AssemblyVersion("0.0.0.0")]
-                        [module: UnverifiableCode]
-                        [module: RefSafetyRules(11)]
-                        
-                        [CompilerGenerated]
-                        internal class Program
-                        {
-                            [CompilerGenerated]
-                            private sealed class <<<Main>$>g__RunAsync|0_0>d : IAsyncStateMachine
-                            {
-                                public int <>1__state;
-                        
-                                public AsyncTaskMethodBuilder <>t__builder;
-                        
-                                private int <y>5__1;
-                        
-                                private TaskAwaiter <>u__1;
-                        
-                                private void MoveNext()
-                                {
-                                    int num = <>1__state;
-                                    try
-                                    {
-                                        TaskAwaiter awaiter;
-                                        if (num != 0)
-                                        {
-                                            <y>5__1 = 5;
-                                            awaiter = Task.Delay(4000).GetAwaiter();
-                                            if (!awaiter.IsCompleted)
-                                            {
-                                                num = (<>1__state = 0);
-                                                <>u__1 = awaiter;
-                                                <<<Main>$>g__RunAsync|0_0>d stateMachine = this;
-                                                <>t__builder.AwaitUnsafeOnCompleted(ref awaiter, ref stateMachine);
-                                                return;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            awaiter = <>u__1;
-                                            <>u__1 = default(TaskAwaiter);
-                                            num = (<>1__state = -1);
-                                        }
-                                        awaiter.GetResult();
-                                        Console.Write(<y>5__1);
-                                    }
-                                    catch (Exception exception)
-                                    {
-                                        <>1__state = -2;
-                                        <>t__builder.SetException(exception);
-                                        return;
-                                    }
-                                    <>1__state = -2;
-                                    <>t__builder.SetResult();
-                                }
-                        
-                                void IAsyncStateMachine.MoveNext()
-                                {
-                                    //ILSpy generated this explicit interface implementation from .override directive in MoveNext
-                                    this.MoveNext();
-                                }
-                        
-                                [DebuggerHidden]
-                                private void SetStateMachine([Nullable(1)] IAsyncStateMachine stateMachine)
-                                {
-                                }
-                        
-                                void IAsyncStateMachine.SetStateMachine([Nullable(1)] IAsyncStateMachine stateMachine)
-                                {
-                                    //ILSpy generated this explicit interface implementation from .override directive in SetStateMachine
-                                    this.SetStateMachine(stateMachine);
-                                }
-                            }
-                        
-                            private static void <Main>$(string[] args)
-                            {
-                            }
-                        
-                            [NullableContext(1)]
-                            [AsyncStateMachine(typeof(<<<Main>$>g__RunAsync|0_0>d))]
-                            [DebuggerStepThrough]
-                            [CompilerGenerated]
-                            internal static Task <<Main>$>g__RunAsync|0_0()
-                            {
-                                <<<Main>$>g__RunAsync|0_0>d stateMachine = new <<<Main>$>g__RunAsync|0_0>d();
-                                stateMachine.<>t__builder = AsyncTaskMethodBuilder.Create();
-                                stateMachine.<>1__state = -1;
-                                stateMachine.<>t__builder.Start(ref stateMachine);
-                                return stateMachine.<>t__builder.Task;
-                            }
-                        }
-
-                        
-
-
-
-
-
-
-
-
-
-                    </code>
-                </pre>
-            </div>
-        </div>
-    </section>   
-
-    <section class="slide prism over bhgry">
-        <div class="grid-container">
-            <div class="HeaderTitle GG"> 
-                <h2 class="headerCODE GG">GetCatFactAsync</h2>
-            </div>
-            <div class="PlaceCodeHere canscroll">
-                <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
-                    <code style="line-height: 24px !important;">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                        using System;
-                        using System.Diagnostics;
-                        using System.Reflection;
-                        using System.Runtime.CompilerServices;
-                        using System.Security;
-                        using System.Security.Permissions;
-                        using System.Threading.Tasks;
-                        
-                        [assembly: CompilationRelaxations(8)]
-                        [assembly: RuntimeCompatibility(WrapNonExceptionThrows = true)]
-                        [assembly: Debuggable(DebuggableAttribute.DebuggingModes.Default | DebuggableAttribute.DebuggingModes.IgnoreSymbolStoreSequencePoints | DebuggableAttribute.DebuggingModes.EnableEditAndContinue | DebuggableAttribute.DebuggingModes.DisableOptimizations)]
-                        [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
-                        [assembly: AssemblyVersion("0.0.0.0")]
-                        [module: UnverifiableCode]
-                        [module: RefSafetyRules(11)]
-                        
-                        public class Program
-                        {
-                            [CompilerGenerated]
-                            private sealed class <Main>d__0 : IAsyncStateMachine
-                            {
-                                public int <>1__state;
-                        
-                                public AsyncVoidMethodBuilder <>t__builder;
-                        
-                                public Program <>4__this;
-                        
-                                private int <y>5__1;
-                        
-                                private TaskAwaiter <>u__1;
-                        
-                                private void MoveNext()
-                                {
-                                    int num = <>1__state;
-                                    try
-                                    {
-                                        TaskAwaiter awaiter;
-                                        if (num != 0)
-                                        {
-                                            <y>5__1 = 5;
-                                            awaiter = Task.Delay(4000).GetAwaiter();
-                                            if (!awaiter.IsCompleted)
-                                            {
-                                                num = (<>1__state = 0);
-                                                <>u__1 = awaiter;
-                                                <Main>d__0 stateMachine = this;
-                                                <>t__builder.AwaitUnsafeOnCompleted(ref awaiter, ref stateMachine);
-                                                return;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            awaiter = <>u__1;
-                                            <>u__1 = default(TaskAwaiter);
-                                            num = (<>1__state = -1);
-                                        }
-                                        awaiter.GetResult();
-                                        Console.Write(<y>5__1);
-                                    }
-                                    catch (Exception exception)
-                                    {
-                                        <>1__state = -2;
-                                        <>t__builder.SetException(exception);
-                                        return;
-                                    }
-                                    <>1__state = -2;
-                                    <>t__builder.SetResult();
-                                }
-                        
-                                void IAsyncStateMachine.MoveNext()
-                                {
-                                    //ILSpy generated this explicit interface implementation from .override directive in MoveNext
-                                    this.MoveNext();
-                                }
-                        
-                                [DebuggerHidden]
-                                private void SetStateMachine([Nullable(1)] IAsyncStateMachine stateMachine)
-                                {
-                                }
-                        
-                                void IAsyncStateMachine.SetStateMachine([Nullable(1)] IAsyncStateMachine stateMachine)
-                                {
-                                    //ILSpy generated this explicit interface implementation from .override directive in SetStateMachine
-                                    this.SetStateMachine(stateMachine);
-                                }
-                            }
-                        
-                            [AsyncStateMachine(typeof(<Main>d__0))]
-                            [DebuggerStepThrough]
-                            private void Main()
-                            {
-                                <Main>d__0 stateMachine = new <Main>d__0();
-                                stateMachine.<>t__builder = AsyncVoidMethodBuilder.Create();
-                                stateMachine.<>4__this = this;
-                                stateMachine.<>1__state = -1;
-                                stateMachine.<>t__builder.Start(ref stateMachine);
-                            }
-                        }
-                                                        
-                    </code>
-                </pre>
-            </div>
-        </div>
-    </section>
-    <section class="slide" style="background-color:white">
+    <section class="slide" style="background-color:whitesmoke">
         <figure>
             <img class="cover" src="pictures/maszynastanow.png" alt="blog">
             <figcaption class="white">CW</figcaption>
@@ -1906,7 +1099,7 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
     <section class="slide prism over bhgry">
         <div class="grid-container">
             <div class="HeaderTitle GG">
-                <h2 class="headerCODE GG">Task, Async. </h2>
+                <h2 class="headerCODE GG">Konstruktor w Task to red herring</h2>
             </div>
             <div class="PlaceCodeHere">
                 <pre style="font-size: 37px;overflow: hidden;  " class="language-csharp">
@@ -1934,7 +1127,7 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
     <section class="slide prism over bhgry">
         <div class="grid-container">
             <div class="HeaderTitle GG">
-                <h2 class="headerCODE GG">Task, Async. </h2>
+                <h2 class="headerCODE GG">Poprawne użycie Task z async, aby wykonać długie zadanie które pierwotnie jest synchroniczne</h2>
             </div>
             <div class="PlaceCodeHere">
                 <pre style="font-size: 34px;overflow: hidden;  " class="language-csharp">
@@ -2038,6 +1231,17 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             <div class="PlaceCodeHere canscroll">
                 <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
                     <code style="line-height: 24px !important;">
+
+
+
+
+
+
+
+
+
+
+
                         public class MyViewModel
                         {
                             public MyViewModel()
@@ -2122,7 +1326,7 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
     <section class="slide prism over bhgry">
         <div class="grid-container">
             <div class="HeaderTitle GG"> 
-                <h2 class="headerCODE GG">GetCatFactAsync</h2>
+                <h2 class="headerCODE GG">Nie wszystko trzeba awaitować</h2>
             </div>
             <div class="PlaceCodeHere canscroll">
                 <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
@@ -2154,7 +1358,7 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
     <section class="slide prism over bhgry">
         <div class="grid-container">
             <div class="HeaderTitle GG"> 
-                <h2 class="headerCODE GG">GetCatFactAsync</h2>
+                <h2 class="headerCODE GG">Przykład techniki async eliding</h2>
             </div>
             <div class="PlaceCodeHere canscroll">
                 <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
@@ -2183,7 +1387,39 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             </div>
         </div>
     </section> 
-    <!-- TODO Wstawić kod GDY ASYNC ELYDING NIE DZIAŁA result -->  
+    <!-- TODO Wstawić kod GDY ASYNC ELYDING NIE DZIAŁA result -->
+    <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG">
+                <h2 class="headerCODE GG">Eliding Async and Await : PROBLEM</h2>
+            </div>
+            <div class="PlaceCodeHere">
+                <pre style="font-size: 30px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 30px !important;">
+                        public async Task&#x3C;string&#x3E; GetWithKeywordsAsync(string url)
+                        {
+                            using (var client = new HttpClient())
+                                return await client.GetStringAsync(url);
+                        }
+                            
+                        public Task&#x3C;string&#x3E; GetElidingKeywordsAsync(string url)
+                        {
+                            using (var client = new HttpClient())
+                                return client.GetStringAsync(url);
+                        }
+                    </code>
+                </pre>
+            </div>
+            <div class="AnswerCode">
+                <div class="pytanie">
+                    <h3></h3>
+                </div>
+                <div class="odpowiedz">
+                   
+                </div>
+            </div>
+          </div>
+    </section>
     <section class="slide" style="background-color:black">
         <figure>
             <img class="cover" src="pictures/slides/25.png" alt="blog">
@@ -2195,14 +1431,71 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             <img class="cover" src="pictures/slides/26.png" alt="blog">
             <figcaption class="white">CW</figcaption>
         </figure>
-    </section>  
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides2/23.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides2/24.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section> 
     <!-- TODO Wstawić kod .Wait() result -->  
     <section class="slide" style="background-color:black">
         <figure>
             <img class="cover" src="pictures/slides/27.png" alt="blog">
             <figcaption class="white">CW</figcaption>
         </figure>
-    </section>    
+    </section> 
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides2/25.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>   
+    <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG">
+                <h2 class="headerCODE GG">Deadlock</h2>
+            </div>
+            <div class="PlaceCodeHere">
+                <pre style="font-size: 21px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 21px !important;">
+                        // Metoda synchronizująca wywołanie FetchDataAsync
+                        public void FetchDataSynchronously()
+                        {
+                            try
+                            {
+                                // Wywołanie metody asynchronicznej w sposób synchroniczny
+                                string result = FetchDataAsync().GetAwaiter().GetResult();
+                                Console.WriteLine(result);
+                            }
+                            catch (Exception ex)
+                            {
+                                // Bezpośrednia obsługa wyjątków
+                                Console.WriteLine($"Wystąpił błąd: {ex.Message}");
+                            }
+                        }
+
+                        // Asynchroniczna metoda pobierająca dane
+                        public async Task<string> FetchDataAsync()
+                        {
+                            using (HttpClient client = new HttpClient())
+                            {
+                                HttpResponseMessage response = await client.GetAsync("https://jsonplaceholder.typicode.com/posts/1");
+                                response.EnsureSuccessStatusCode();
+                                return await response.Content.ReadAsStringAsync();
+                            }
+                        }
+                    </code>
+                </pre>
+            </div>
+          </div>
+    </section>
     <section class="slide" style="background-color:black">
         <figure>
             <img class="cover" src="pictures/slides/28.png" alt="blog">
@@ -2210,123 +1503,70 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
         </figure>
     </section>
     <!-- TODO Wstawić kod deadlock sync over async -->      
-    <section class="slide" style="background-color:black">
-        <figure>
-            <img class="cover" src="pictures/slides/29.png" alt="blog">
-            <figcaption class="white">CW</figcaption>
-        </figure>
-    </section>
     <section class="slide prism over bhgry">
         <div class="grid-container">
-            <div class="HeaderTitle GG"> 
-                <h2 class="headerCODE GG">Async Void</h2>
+            <div class="HeaderTitle GG">
+                <h2 class="headerCODE GG">Deadlock</h2>
             </div>
-            <div class="PlaceCodeHere canscroll">
-                <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
-                    <code style="line-height: 24px !important;">
-                        private Task ForeverLong(CancellationToken ct)
+            <div class="PlaceCodeHere">
+                <pre style="font-size: 23px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 23px !important;">
+
+                        private readonly static string _url = &#x22;https://postman-echo.com/delay/10&#x22;;
+
+                        private void Button_Click(object sender, RoutedEventArgs e)
                         {
-                            while (true)
-                            {
-                                ct.ThrowIfCancellationRequested();
-                        
-                                //Cheking 
-                        
-                                Task.Delay(1000);
-                            }
-                        }                                         
-                    </code>
-                </pre>
-            </div>
-        </div>
-    </section>          
-    <section class="slide" style="background-color:black">
-        <figure>
-            <img class="cover" src="pictures/slides/30.png" alt="blog">
-            <figcaption class="white">CW</figcaption>
-        </figure>
-    </section>
-    <section class="slide" style="background-color:black">
-        <figure>
-            <img class="cover" src="pictures/slides/31.png" alt="blog">
-            <figcaption class="white">CW</figcaption>
-        </figure>
-    </section>
-       <!-- TODO Wstawić kod iASYNCENUMERALBE result -->  
-    <section class="slide prism over bhgry">
-        <div class="grid-container">
-            <div class="HeaderTitle GG"> 
-                <h2 class="headerCODE GG">IAsyncEnumerable przykład użycia</h2>
-            </div>
-            <div class="PlaceCodeHere canscroll">
-                <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
-                    <code style="line-height: 24px !important;">
-                        private async IAsyncEnumerable&lt;string&gt; GeMyPoem()
-                        {
-                            using var stream = new StreamReader(@&quot;D:\p.txt&quot;);
-                        
-                            while (await stream.ReadLineAsync() is string line)
-                            {
-                                await Task.Delay(500);
-                        
-                                yield return line;
-                            }
-                        }                     
-                    </code>
-                </pre>
-            </div>
-        </div>
-    </section>  
-    <section class="slide prism over bhgry">
-        <div class="grid-container">
-            <div class="HeaderTitle GG"> 
-                <h2 class="headerCODE GG">IAsyncEnumerable przykład użycia</h2>
-            </div>
-            <div class="PlaceCodeHere canscroll">
-                <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
-                    <code style="line-height: 24px !important;">
-                        private async IAsyncEnumerable&lt;string&gt; GeMyPoem()
-                        {
-                            using var stream = new StreamReader(@&quot;D:\p.txt&quot;);
-                        
-                            while (await stream.ReadLineAsync() is string line)
-                            {
-                                await Task.Delay(500);
-                        
-                                yield return line;
-                            }
-                        }                     
-                    </code>
-                </pre>
-            </div>
-        </div>
-    </section>  
-    <section class="slide prism over bhgry">
-        <div class="grid-container">
-            <div class="HeaderTitle GG"> 
-                <h2 class="headerCODE GG">IAsyncEnumerable przykład użycia</h2>
-            </div>
-            <div class="PlaceCodeHere canscroll">
-                <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
-                    <code style="line-height: 24px !important;">
-                        private async void Button_Click(object sender, RoutedEventArgs e)
-                        {
-                            await Read();
+                            ResultTextBlock.Text = &#x22;&#x22;;
+                            ResultTextBlock.Text += &#x22;Przed MyGetStringAsync()&#x22;;
+                            var result = MyGetStringAsync().Result;
+                            ResultTextBlock.Text += &#x22;Napisze co&#x15B; w mi&#x119;dzyczasie&#x22;;
+                            ResultTextBlock.Text = result;
+                            ResultTextBlock.Text += &#x22;Po MyGetStringAsync()&#x22;;
                         }
-                    
-                        private async Task Read()
+                        
+                        public async Task&#x3C;string&#x3E; MyGetStringAsync()
                         {
-                            txtBlock.Text = "";
-                            await foreach (var item in GeMyPoem())
+                            using (HttpClient httpClient = new HttpClient())
                             {
-                                txtBlock.Text += item + "\n";
+                                return await httpClient.GetStringAsync(_url);
                             }
-                        }                
+                        }
                     </code>
                 </pre>
             </div>
-        </div>
-    </section>  
+          </div>
+    </section>
+    <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG">
+                <h2 class="headerCODE GG">ConfigureAwait(false);</h2>
+            </div>
+            <div class="PlaceCodeHere">
+                <pre style="font-size: 19px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 19px !important;">
+                        private void Button_Click(object sender, RoutedEventArgs e)
+                        {
+                            ResultTextBlock.Text = &#x22;&#x22;;
+                            ResultTextBlock.Text += &#x22;Przed MyGetStringAsync()&#x22;;
+                            var result = MyGetStringAsync().Result;
+                            ResultTextBlock.Text += &#x22;Napisze co&#x15B; w mi&#x119;dzyczasie&#x22;;
+                            ResultTextBlock.Text = result;
+                            ResultTextBlock.Text += &#x22;Po MyGetStringAsync()&#x22;;
+                        }
+                        
+                        public async Task&#x3C;string&#x3E; MyGetStringAsync()
+                        {
+                            using (HttpClient httpClient = new HttpClient())
+                            {
+                                return await httpClient.GetStringAsync(_url)
+                                    .ConfigureAwait(false);
+                            }
+                        }
+                    </code>
+                </pre>
+            </div>
+          </div>
+    </section>
     <section class="slide" style="background-color:black">
         <figure>
             <img class="cover" src="pictures/slides/32.png" alt="blog">
@@ -2336,7 +1576,7 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
     <section class="slide prism over bhgry">
         <div class="grid-container">
             <div class="HeaderTitle GG"> 
-                <h2 class="headerCODE GG">GetCatFactAsync</h2>
+                <h2 class="headerCODE GG">ConfigureAwait co właściwie robi</h2>
             </div>
             <div class="PlaceCodeHere canscroll">
                 <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
@@ -2386,7 +1626,7 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
     <section class="slide prism over bhgry">
         <div class="grid-container">
             <div class="HeaderTitle GG"> 
-                <h2 class="headerCODE GG">GetCatFactAsync</h2>
+                <h2 class="headerCODE GG">ConfigureAwait w .NET 8</h2>
             </div>
             <div class="PlaceCodeHere canscroll">
                 <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
@@ -2417,12 +1657,12 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             </div>
         </div>
     </section> 
-    <section class="slide" style="background-color:black">
+    <!-- <section class="slide" style="background-color:black">
         <figure>
             <img class="cover" src="pictures/ConfigureAwait.png" alt="blog">
             <figcaption class="white">CW</figcaption>
         </figure>
-    </section>
+    </section> -->
     <section class="slide" style="background-color:black">
         <figure>
             <img class="cover" src="pictures/ConfigureAwait-02.png" alt="blog">
@@ -2455,11 +1695,214 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
     </section>
     <section class="slide" style="background-color:black">
         <figure>
+            <img class="cover" src="pictures/slides/29.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG"> 
+                <h2 class="headerCODE GG">ThrowIfCancellationRequested</h2>
+            </div>
+            <div class="PlaceCodeHere canscroll">
+                <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 24px !important;">
+                        private Task ForeverLong(CancellationToken ct)
+                        {
+                            while (true)
+                            {
+                                ct.ThrowIfCancellationRequested();
+                        
+                                //Cheking 
+                        
+                                Task.Delay(1000);
+                            }
+                        }                                         
+                    </code>
+                </pre>
+            </div>
+        </div>
+    </section>          
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/30.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/31.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
+       <!-- TODO Wstawić kod iASYNCENUMERALBE result -->
+       <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG"> 
+                <h2 class="headerCODE GG">Task IEnumerable przykład użycia</h2>
+            </div>
+            <div class="PlaceCodeHere canscroll">
+                <pre style="font-size: 28px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 28px !important;">
+                        private async Task&lt;IEnumerable&lt;string&gt;&gt; GeMyPoem()
+                        {
+                            using var stream = new StreamReader(@&quot;D:\p.txt&quot;);
+                        
+                            while (await stream.ReadLineAsync() is string line)
+                            {
+                                await Task.Delay(500);
+                        
+                                yield return line;
+                            }
+                        }                     
+                    </code>
+                </pre>
+            </div>
+        </div>
+    </section>  
+       <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG"> 
+                <h2 class="headerCODE GG">IAsyncEnumerable przykład użycia</h2>
+            </div>
+            <div class="PlaceCodeHere canscroll">
+                <pre style="font-size: 28px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 28px !important;">
+                        private async IAsyncEnumerable&lt;string&gt; GeMyPoem()
+                        {
+                            using var stream = new StreamReader(@&quot;D:\p.txt&quot;);
+                        
+                            while (await stream.ReadLineAsync() is string line)
+                            {
+                                await Task.Delay(500);
+                        
+                                yield return line;
+                            }
+                        }                     
+                    </code>
+                </pre>
+            </div>
+        </div>
+    </section>  
+    <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG"> 
+                <h2 class="headerCODE GG">IAsyncEnumerable przykład użycia</h2>
+            </div>
+            <div class="PlaceCodeHere canscroll">
+                <pre style="font-size: 28px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 28px !important;">
+                        private async IAsyncEnumerable&lt;string&gt; GeMyPoem()
+                        {
+                            using var stream = new StreamReader(@&quot;D:\p.txt&quot;);
+                        
+                            while (await stream.ReadLineAsync() is string line)
+                            {
+                                await Task.Delay(500);
+                        
+                                yield return line;
+                            }
+                        }                     
+                    </code>
+                </pre>
+            </div>
+        </div>
+    </section>  
+    <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG"> 
+                <h2 class="headerCODE GG">IAsyncEnumerable przykład użycia</h2>
+            </div>
+            <div class="PlaceCodeHere canscroll">
+                <pre style="font-size: 26px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 26px !important;">
+                        private async void Button_Click(object sender, RoutedEventArgs e)
+                        {
+                            await Read();
+                        }
+                    
+                        private async Task Read()
+                        {
+                            txtBlock.Text = "";
+                            await foreach (var item in GeMyPoem())
+                            {
+                                txtBlock.Text += item + "\n";
+                            }
+                        }                
+                    </code>
+                </pre>
+            </div>
+        </div>
+    </section>  
+
+    <section class="slide" style="background-color:black">
+        <figure>
             <img class="cover" src="pictures/slides/37.png" alt="blog">
             <figcaption class="white">CW</figcaption>
         </figure>
     </section>
     <!-- TODO Wstawić kod VALUE TASK result -->
+    <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG">
+                <h2 class="headerCODE GG">new ValueTask</h2>
+            </div>
+            <div class="PlaceCodeHere">
+                <pre style="font-size: 40px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 40px !important;">
+                        public Task<int> GetCustomerIdAsync()
+                        {
+                            return Task.FromResult(1);
+                        }
+
+                        public ValueTask<int> GetCustomerIdAsync()
+                        {
+                            return new ValueTask(1);
+                        }
+                    </code>
+                </pre>
+            </div>
+            <div class="AnswerCode">
+                <div class="pytanie">
+                    <h3></h3>
+                </div>
+                <div class="odpowiedz">
+                    
+                </div>
+            </div>
+          </div>
+    </section>
+    <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG">
+                <h2 class="headerCODE GG">new ValueTask</h2>
+            </div>
+            <div class="PlaceCodeHere">
+                <pre style="font-size: 20px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 20px !important;">
+                        // WARNING
+                        ValueTask&lt;int&gt; vt = SomeValueTaskReturningMethodAsync();
+                        ... // storing the instance into a local makes it much more likely it&#39;ll be misused,
+                            // but it could still be ok
+                        
+                        // BAD: awaits multiple times
+                        ValueTask&lt;int&gt; vt = SomeValueTaskReturningMethodAsync();
+                        int result = await vt;
+                        int result2 = await vt;
+                        
+                        // BAD: awaits concurrently (and, by definition then, multiple times)
+                        ValueTask&lt;int&gt; vt = SomeValueTaskReturningMethodAsync();
+                        Task.Run(async () =&gt; await vt);
+                        Task.Run(async () =&gt; await vt);
+                        
+                        // BAD: uses GetAwaiter().GetResult() when it&#39;s not known to be done
+                        ValueTask&lt;int&gt; vt = SomeValueTaskReturningMethodAsync();
+                        int result = vt.GetAwaiter().GetResult();
+                    </code>
+                </pre>
+            </div>
+          </div>
+    </section>
     <section class="slide" style="background-color:black">
         <figure>
             <img class="cover" src="pictures/slides2/17.png" alt="blog">
