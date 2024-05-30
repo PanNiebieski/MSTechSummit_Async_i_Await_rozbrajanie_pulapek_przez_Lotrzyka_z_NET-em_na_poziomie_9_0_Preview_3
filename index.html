@@ -1460,11 +1460,12 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
     <section class="slide prism over bhgry">
         <div class="grid-container">
             <div class="HeaderTitle GG">
-                <h2 class="headerCODE GG">Deadlock</h2>
+                <h2 class="headerCODE GG">.GetAwaiter().GetResult();</h2>
             </div>
             <div class="PlaceCodeHere">
-                <pre style="font-size: 21px;overflow: hidden;  " class="language-csharp">
-                    <code style="line-height: 21px !important;">
+                <pre style="font-size: 19px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 19px !important;">
+                        
                         // Metoda synchronizująca wywołanie FetchDataAsync
                         public void FetchDataSynchronously()
                         {
@@ -1486,7 +1487,8 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
                         {
                             using (HttpClient client = new HttpClient())
                             {
-                                HttpResponseMessage response = await client.GetAsync("https://jsonplaceholder.typicode.com/posts/1");
+                                HttpResponseMessage response = 
+                                    await client.GetAsync("https://jsonplaceholder.typicode.com/posts/1");
                                 response.EnsureSuccessStatusCode();
                                 return await response.Content.ReadAsStringAsync();
                             }
@@ -1542,8 +1544,11 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
                 <h2 class="headerCODE GG">ConfigureAwait(false);</h2>
             </div>
             <div class="PlaceCodeHere">
-                <pre style="font-size: 19px;overflow: hidden;  " class="language-csharp">
-                    <code style="line-height: 19px !important;">
+                <pre style="font-size: 23px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 23px !important;">
+                        
+                        private readonly static string _url = &#x22;https://postman-echo.com/delay/10&#x22;;
+
                         private void Button_Click(object sender, RoutedEventArgs e)
                         {
                             ResultTextBlock.Text = &#x22;&#x22;;
@@ -1611,12 +1616,12 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             <figcaption class="white">CW</figcaption>
         </figure>
     </section>
-    <section class="slide" style="background-color:black">
+    <!-- <section class="slide" style="background-color:black">
         <figure>
             <img class="cover" src="pictures/slides/32.png" alt="blog">
             <figcaption class="white">CW</figcaption>
         </figure>
-    </section>
+    </section> -->
     <section class="slide" style="background-color:black">
         <figure>
             <img class="cover" src="pictures/slides/34.png" alt="blog">
@@ -1705,8 +1710,8 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
                 <h2 class="headerCODE GG">ThrowIfCancellationRequested</h2>
             </div>
             <div class="PlaceCodeHere canscroll">
-                <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
-                    <code style="line-height: 24px !important;">
+                <pre style="font-size: 34px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 34px !important;">
                         private Task ForeverLong(CancellationToken ct)
                         {
                             while (true)
@@ -1729,6 +1734,46 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             <figcaption class="white">CW</figcaption>
         </figure>
     </section>
+    <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG"> 
+                <h2 class="headerCODE GG">WaitAsync</h2>
+            </div>
+            <div class="PlaceCodeHere">
+                <pre style="font-size: 19px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 19px !important;">
+
+                        public async Task DoWorkAsync()
+                        {
+                            // Symulacja długotrwałej operacji
+                            await Task.Delay(5000);
+                            Console.WriteLine("Operacja zakończona.");
+                        }
+                    
+                        public async Task Run()
+                        {
+                            using var cts = new CancellationTokenSource();
+                            Task mytask = DoWorkAsync();
+                    
+                            // Anuluj zadanie po 2 sekundach
+                            cts.CancelAfter(2000);
+                    
+                            try
+                            {
+                                // Użycie WaitAsync, aby dodać możliwość anulowania
+                                await mytask.WaitAsync(cts.Token);
+                            }
+                            catch (OperationCanceledException)
+                            {
+                                Console.WriteLine("Zadanie zostało anulowane.");
+                            }
+                        }                                      
+                    </code>
+                </pre>
+            </div>
+        </div>
+    </section>          
+
     <section class="slide" style="background-color:black">
         <figure>
             <img class="cover" src="pictures/slides/31.png" alt="blog">
