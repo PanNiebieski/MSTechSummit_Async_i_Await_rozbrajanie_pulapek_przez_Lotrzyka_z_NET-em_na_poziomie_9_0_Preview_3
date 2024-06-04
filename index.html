@@ -127,13 +127,13 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             <figcaption class="white">CW</figcaption>
         </figure>
     </section>
-    <section class="slide" style="background-color:black">
+    <section class="slide" style="background-color:FFFFFF">
         <figure>
             <img class="cover" src="pictures/02.gif" alt="blog">
             <figcaption class="white">CW</figcaption>
         </figure>
     </section>
-    <section class="slide" style="background-color:black">
+    <section class="slide" style="background-color:FFFFFF">
         <figure>
             <img class="cover" src="pictures/03.gif" alt="blog">
             <figcaption class="white">CW</figcaption>
@@ -328,7 +328,7 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             <figcaption class="white">CW</figcaption>
         </figure>
     </section>
-    <section class="slide" style="background-color:black">
+    <section class="slide" style="background-color:#FFFFFF">
         <figure>
             <img class="cover" src="pictures/WPF APP.PNG" alt="blog">
             <figcaption class="white">CW</figcaption>
@@ -1205,19 +1205,19 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             </div>
         </div>
     </section>
-    <section class="slide" style="background-color:black">
+    <section class="slide" style="background-color:#1E1E1E">
         <figure>
             <img class="cover" src="pictures/asyncvoid-01.png" alt="blog">
             <figcaption class="white">CW</figcaption>
         </figure>
     </section>
-    <section class="slide" style="background-color:black">
+    <section class="slide" style="background-color:#1E1E1E">
         <figure>
             <img class="cover" src="pictures/asyncvoid-02.png" alt="blog">
             <figcaption class="white">CW</figcaption>
         </figure>
     </section>   
-    <section class="slide" style="background-color:black">
+    <section class="slide"  style="background-color:#1E1E1E">
         <figure>
             <img class="cover" src="pictures/asyncvoid-03.png" alt="blog">
             <figcaption class="white">CW</figcaption>
@@ -1283,7 +1283,7 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             </div>
         </div>
     </section>  
-    <section class="slide" style="background-color:black">
+    <section class="slide" style="background-color:#1E1E1E">
         <figure>
             <img class="cover" src="pictures/asyncvoid-04.png" alt="blog">
             <figcaption class="white">CW</figcaption>
@@ -1680,19 +1680,19 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             <figcaption class="white">CW</figcaption>
         </figure>
     </section> -->
-    <section class="slide" style="background-color:black">
+    <section class="slide" style="background-color:#1E1E1E">
         <figure>
             <img class="cover" src="pictures/ConfigureAwait-02.png" alt="blog">
             <figcaption class="white">CW</figcaption>
         </figure>
     </section>
-    <section class="slide" style="background-color:black">
+    <section class="slide" style="background-color:#1E1E1E">
         <figure>
             <img class="cover" src="pictures/ConfigureAwait-03.png" alt="blog">
             <figcaption class="white">CW</figcaption>
         </figure>
     </section>
-    <section class="slide" style="background-color:black">
+    <section class="slide" style="background-color:#1E1E1E">
         <figure>
             <img class="cover" src="pictures/ConfigureAwait-04.png" alt="blog">
             <figcaption class="white">CW</figcaption>
@@ -1801,17 +1801,20 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             <div class="PlaceCodeHere canscroll">
                 <pre style="font-size: 28px;overflow: hidden;  " class="language-csharp">
                     <code style="line-height: 28px !important;">
-                        private async Task&lt;IEnumerable&lt;string&gt;&gt; GeMyPoem()
+                        private async Task&lt;IEnumerable&lt;string&gt;&gt; GeMyPoem2()
                         {
                             using var stream = new StreamReader(@&quot;D:\p.txt&quot;);
                         
+                            List&lt;string&gt; s = new();
                             while (await stream.ReadLineAsync() is string line)
                             {
                                 await Task.Delay(500);
                         
-                                yield return line;
+                                s.Add(line);
                             }
-                        }                     
+                        
+                            return s;
+                        }                  
                     </code>
                 </pre>
             </div>
@@ -1891,7 +1894,12 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             </div>
         </div>
     </section>  
-
+    <section class="slide" style="background-color:#FFFFFF">
+        <figure>
+            <img class="cover" src="pictures/04.gif" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
     <section class="slide" style="background-color:black">
         <figure>
             <img class="cover" src="pictures/slides/37.png" alt="blog">
