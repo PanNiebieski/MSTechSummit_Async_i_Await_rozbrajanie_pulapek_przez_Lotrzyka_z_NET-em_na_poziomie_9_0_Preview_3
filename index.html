@@ -86,12 +86,12 @@ Ulepszymy kod async i await.
 Najlepsze praktyki, czyli na jakie pułapki trzeba uważać.
 Pokaż mi coś fajnego z .NET 9 Preview 3
 -->
-<section class="slide" style="background-color:black">
+<!-- <section class="slide" style="background-color:black">
     <figure>
         <img class="cover" src="pictures/MSTS24-204-OADN-11.png" alt="blog">
         <figcaption class="white">CW</figcaption>
     </figure>
-</section>
+</section> -->
     <section class="slide" style="background-color:black">
         <figure>
             <img class="cover" src="pictures/slides2/1.png" alt="blog">
@@ -1329,7 +1329,38 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
                 </pre>
             </div>
         </div>
-    </section>  
+    </section> 
+    <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG"> 
+                <h2 class="headerCODE GG">Async Void w Lambda - źle</h2>
+            </div>
+            <div class="PlaceCodeHere">
+                <pre style="font-size: 44px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 44px !important;">
+                        var _ = 
+                            async () => 
+                                { await ProcessData(); }
+                    </code>
+                </pre>
+            </div>
+        </div>
+    </section> 
+    <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG"> 
+                <h2 class="headerCODE GG">Async Void w Lambda - dobrze</h2>
+            </div>
+            <div class="PlaceCodeHere">
+                <pre style="font-size: 44px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 44px !important;">
+                        var _ = 
+                            async () => await ProcessData(); 
+                    </code>
+                </pre>
+            </div>
+        </div>
+    </section>   
     <section class="slide" style="background-color:black">
         <figure>
             <img class="cover" src="pictures/slides/23.png" alt="blog">
@@ -1986,6 +2017,219 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             <img class="cover" src="pictures/slides2/17.png" alt="blog">
             <figcaption class="white">CW</figcaption>
         </figure>
+    </section>
+    <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG"> 
+                <h2 class="headerCODE GG">Parallel.ForEach</h2>
+            </div>
+            <div class="PlaceCodeHere canscroll">
+                <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 24px !important;">
+                        var numbers = new List&lt;int&gt; { 1, 2, 3, 4, 5 };
+
+                        Parallel.ForEach(numbers, number =&gt;
+                        {
+                            Console.WriteLine($&quot;Processing {number} on thread {Thread.CurrentThread.ManagedThreadId}&quot;);
+                            Thread.Sleep(1000); // Symulacja pracy CPU
+                        });
+                    </code>
+                </pre>
+            </div>
+        </div>
+    </section>
+    <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG"> 
+                <h2 class="headerCODE GG">Task.WhenAll</h2>
+            </div>
+            <div class="PlaceCodeHere canscroll">
+                <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 24px !important;">
+                        
+                        
+                        
+
+                        var urls = new List&lt;string&gt;
+                        {
+                            &quot;https://cezarywalenciuk.pl&quot;,
+                            &quot;https://www.instagram.com/&quot;,
+                            &quot;https://www.youtube.com/&quot;
+                        };
+                        
+                        var tasks = new List&lt;Task&gt;();
+                        
+                        using HttpClient client = new HttpClient();
+                        
+                        foreach (var url in urls)
+                        {
+                            tasks.Add(FetchUrlAsync(client, url));
+                        }
+                        
+                        await Task.WhenAll(tasks);
+
+                        static async Task FetchUrlAsync(HttpClient client, string url)
+                        {
+                            Console.WriteLine($&quot;Fetching {url}&quot;);
+                            string result = await client.GetStringAsync(url);
+                            Console.WriteLine($&quot;Finished fetching {url}: {result.Length} characters.&quot;);
+                        }
+                    </code>
+                </pre>
+            </div>
+        </div>
+    </section> 
+    <section class="slide prism over bhgry">
+        <div class="grid-container">
+            <div class="HeaderTitle GG"> 
+                <h2 class="headerCODE GG">Async Void w Lambda - źle</h2>
+            </div>
+            <div class="PlaceCodeHere canscroll">
+                <pre style="font-size: 20px;overflow: hidden;  " class="language-csharp">
+                    <code style="line-height: 20px !important;">
+                        
+                        
+                        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        
+
+
+
+
+                        using System.Diagnostics;
+
+                        var ids = Enumerable.Range(1, 10).ToList();
+                        
+                        await WhenAll(ids);
+                        
+                        await ParallelForeach(ids);
+                        
+                        async Task Process(int id)
+                        {
+                            await Task.Delay(2000);
+                            Console.WriteLine($&quot;Processed id: {id}&quot;);
+                        }
+                        
+                        // Good option for batches of I/O that 
+                        // WON&#39;T throttle/limit the destination (api, db, etc).
+                        async Task WhenAll(List&lt;int&gt; ids)
+                        {
+                            Console.WriteLine(&quot;Before WhenAll: &quot; + DateTime.Now.ToLongTimeString());
+                            Stopwatch s = Stopwatch.StartNew();
+
+                            await Task.WhenAll(ids.Select(id =&gt; Process(id)));
+
+                            stopwatch.Stop();
+                            Console.WriteLine(&quot;After WhenAll: &quot; + DateTime.Now.ToLongTimeString());
+                            Console.WriteLine
+                            ($&quot;Elapsed Time: {s.Elapsed.TotalSeconds:F2} seconds, {s.ElapsedMilliseconds} ms&quot;);
+                        }
+                        
+                        // Good option for processing that COULD throttle/limit the destination
+                        // Also good for light/medium CPU bound in small batches
+                        async Task ParallelForeach(List&lt;int&gt; ids)
+                        {
+                            // Parallel.ForEach
+                            Console.WriteLine(&quot;Before ParallelForeach: &quot; + DateTime.Now.ToLongTimeString());
+                            ParallelOptions options = new()
+                            {
+                                MaxDegreeOfParallelism = 2
+                            };
+                        
+                            Stopwatch s = Stopwatch.StartNew();
+                            await Parallel.ForEachAsync(ids, options, async (id, token) =&gt;
+                            {
+                                await Process(id);
+                            });
+
+                            stopwatch.Stop();
+                            Console.WriteLine(&quot;After ParallelForeach: &quot; + DateTime.Now.ToLongTimeString());
+                            Console.WriteLine
+                            ($&quot;Elapsed Time: {s.Elapsed.TotalSeconds:F2} seconds, {s.ElapsedMilliseconds} ms&quot;);
+                        }
+                    </code>
+                </pre>
+            </div>
+        </div>
+    </section>
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/05.gif" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section> 
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/40.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section> 
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/41.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section> 
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/42.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section> 
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/43.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section> 
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/44.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section> 
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/45.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section> 
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/46.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section> 
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/47.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section> 
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/slides/48.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
     </section> 
     <!-- TODO Wstawić kod CO JEST SZYBSZE PARREL -->  
     <section class="slide" style="background-color:black">
@@ -2055,21 +2299,23 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             <div class="PlaceCodeHere canscroll">
                 <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
                     <code style="line-height: 24px !important;">
-                        List&lt;Task&lt;int&gt;&gt; tasks = Enumerable.Range(1,5).Select(Calculate).ToList();
+                        using System.Diagnostics;
 
-                        await foreach (var item in Task.WhenEach(tasks))
+                        var tasks = Enumerable.Range(1, 20).Select(DoSomeTask);
+                        
+                        await foreach (var task in Task.WhenEach(tasks))
                         {
-                            Console.WriteLine(item);
+                            var result = await task;
+                            Console.WriteLine($"{result.TaskName} is done, took {result.ExecutionTime.TotalMilliseconds}ms");
                         }
                         
-                        async Task&lt;int&gt; Calculate(int order)
+                        static async Task<(string TaskName, TimeSpan ExecutionTime)> DoSomeTask(int taskIndex)
                         {
-                            var number = Random.Shared.Next(500, 5000);
-                        
-                            await Task.Delay(number);
-                        
-                            return number;
-                        }                           
+                            var stopwatch = Stopwatch.StartNew();
+                            await Task.Delay(Random.Shared.Next(100, 2500));
+                            stopwatch.Stop();
+                            return ($"Task {taskIndex}", stopwatch.Elapsed);
+                        }                 
                     </code>
                 </pre>
             </div>
@@ -2083,27 +2329,100 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             <div class="PlaceCodeHere canscroll">
                 <pre style="font-size: 24px;overflow: hidden;  " class="language-csharp">
                     <code style="line-height: 24px !important;">
-                        using var cts = new CancellationTokenSource(10_000);
-                        await foreach (var item in Task.WhenEach(connectionRequests).WithCancellation(cts.Token))
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        var cts = new CancellationTokenSource();
+                        cts.CancelAfter(2500);
+                        // Anuluj zadania po 2.5 sekundy
+                        
+                        var tasks = new List&lt;Task&lt;int&gt;&gt;
+                                {
+                                    DoWork(1, 1000,cts.Token),
+                                    DoWork(2, 1500,cts.Token),
+                                    DoWork(3, 3000,cts.Token)
+                                };
+                        
+                        try
                         {
-                            // If TryReset fails, the timeout expired right after the last task completed.
-                            if (!cts.TryReset()) cts.Token.ThrowIfCancellationRequested();
+                            await foreach (var task in Task.WhenEach(tasks))
+                            {
+                                var result = await task;
+                                Console.WriteLine($&quot;{result} is done&quot;);
+                            }
                         
-                            ProcessItem(item.Result);
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            Console.WriteLine(&quot;Operacja została anulowana.&quot;);
+                        }
                         
-                            cts.CancelAfter(10_000); // Start the timer again
-                        }                         
+                        
+                        static async Task&lt;int&gt; DoWork(int id, int delay, CancellationToken cancellationToken)
+                        {
+                            await Task.Delay(delay / 2);
+                        
+                            if (cancellationToken.IsCancellationRequested)
+                            {
+                                Console.WriteLine(&quot;Anulowanie operacji...Przy 1 sprawdzeniu&quot;);
+                                cancellationToken.ThrowIfCancellationRequested();
+                            }
+                        
+                            await Task.Delay(delay / 2);
+                        
+                            if (cancellationToken.IsCancellationRequested)
+                            {
+                                Console.WriteLine(&quot;Anulowanie operacji...Przy 2 sprawdzeniu&quot;);
+                                cancellationToken.ThrowIfCancellationRequested();
+                            }
+                        
+                            Console.WriteLine($&quot;Zadanie {id} zakończone.&quot;);
+                            return id;
+                        }
+                        
+                                               
                     </code>
                 </pre>
             </div>
         </div>
-    </section>        
+    </section>
     <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/6.gif" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>        
+    <!-- <section class="slide" style="background-color:black">
         <figure>
             <img class="cover" src="pictures/MSTS24-204-OADN-11.png" alt="blog">
             <figcaption class="white">CW</figcaption>
         </figure>
-    </section>
+    </section> -->
     <!-- <div class="progress"></div> -->
     <footer class="badge badge-top-left">
         <a href="#" class="fullscreen">Fullscreen</a>
