@@ -2231,6 +2231,12 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
             <figcaption class="white">CW</figcaption>
         </figure>
     </section> 
+    <section class="slide" style="background-color:black">
+        <figure>
+            <img class="cover" src="pictures/taskwhenallvs.png" alt="blog">
+            <figcaption class="white">CW</figcaption>
+        </figure>
+    </section>
     <!-- TODO Wstawić kod CO JEST SZYBSZE PARREL -->  
     <section class="slide" style="background-color:black">
         <figure>
@@ -2353,6 +2359,9 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
                         
                         
                         
+
+
+
                         
                         
                         
@@ -2383,7 +2392,8 @@ Pokaż mi coś fajnego z .NET 9 Preview 3
                         }
                         
                         
-                        static async Task&lt;int&gt; DoWork(int id, int delay, CancellationToken cancellationToken)
+                        static async Task&lt;int&gt; DoWork(int id, int delay, 
+                            CancellationToken cancellationToken)
                         {
                             await Task.Delay(delay / 2);
                         
